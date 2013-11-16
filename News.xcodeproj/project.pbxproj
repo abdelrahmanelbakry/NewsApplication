@@ -24,6 +24,10 @@
 		50DD3F18182529D000E40EEE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DD3EF0182529CF00E40EEE /* Foundation.framework */; };
 		50DD3F20182529D000E40EEE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50DD3F1E182529D000E40EEE /* InfoPlist.strings */; };
 		50DD3F23182529D000E40EEE /* NewsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DD3F22182529D000E40EEE /* NewsTests.m */; };
+		50FC1EA718377DA900B4567B /* HeadLineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC1EA618377DA900B4567B /* HeadLineViewController.m */; };
+		50FC1EAA18377DC400B4567B /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC1EA918377DC400B4567B /* DetailViewController.m */; };
+		50FC1EAD18377E9100B4567B /* HeadlineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC1EAC18377E9100B4567B /* HeadlineCell.m */; };
+		50FC1EB0183784A300B4567B /* TopicModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC1EAF183784A300B4567B /* TopicModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +64,14 @@
 		50DD3F1F182529D000E40EEE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		50DD3F21182529D000E40EEE /* NewsTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewsTests.h; sourceTree = "<group>"; };
 		50DD3F22182529D000E40EEE /* NewsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewsTests.m; sourceTree = "<group>"; };
+		50FC1EA518377DA800B4567B /* HeadLineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadLineViewController.h; sourceTree = "<group>"; };
+		50FC1EA618377DA900B4567B /* HeadLineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadLineViewController.m; sourceTree = "<group>"; };
+		50FC1EA818377DC400B4567B /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		50FC1EA918377DC400B4567B /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		50FC1EAB18377E9100B4567B /* HeadlineCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadlineCell.h; sourceTree = "<group>"; };
+		50FC1EAC18377E9100B4567B /* HeadlineCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadlineCell.m; sourceTree = "<group>"; };
+		50FC1EAE183784A300B4567B /* TopicModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicModel.h; sourceTree = "<group>"; };
+		50FC1EAF183784A300B4567B /* TopicModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +138,14 @@
 				50DD3F0C182529CF00E40EEE /* ViewController.h */,
 				50DD3F0D182529CF00E40EEE /* ViewController.m */,
 				50DD3EF5182529CF00E40EEE /* Supporting Files */,
+				50FC1EA518377DA800B4567B /* HeadLineViewController.h */,
+				50FC1EA618377DA900B4567B /* HeadLineViewController.m */,
+				50FC1EA818377DC400B4567B /* DetailViewController.h */,
+				50FC1EA918377DC400B4567B /* DetailViewController.m */,
+				50FC1EAB18377E9100B4567B /* HeadlineCell.h */,
+				50FC1EAC18377E9100B4567B /* HeadlineCell.m */,
+				50FC1EAE183784A300B4567B /* TopicModel.h */,
+				50FC1EAF183784A300B4567B /* TopicModel.m */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -274,6 +294,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50FC1EAA18377DC400B4567B /* DetailViewController.m in Sources */,
+				50FC1EAD18377E9100B4567B /* HeadlineCell.m in Sources */,
+				50FC1EB0183784A300B4567B /* TopicModel.m in Sources */,
+				50FC1EA718377DA900B4567B /* HeadLineViewController.m in Sources */,
 				50DD3EFB182529CF00E40EEE /* main.m in Sources */,
 				50DD3EFF182529CF00E40EEE /* AppDelegate.m in Sources */,
 				50DD3F0E182529CF00E40EEE /* ViewController.m in Sources */,
@@ -467,6 +491,7 @@
 				50DD3F28182529D000E40EEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		50DD3F29182529D000E40EEE /* Build configuration list for PBXNativeTarget "NewsTests" */ = {
 			isa = XCConfigurationList;
@@ -475,6 +500,7 @@
 				50DD3F2B182529D000E40EEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
