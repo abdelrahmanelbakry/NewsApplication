@@ -26,4 +26,19 @@
     // Configure the view for the selected state
 }
 
+
+
+-(void)setCellDataWith:(TopicModel *)model
+{
+    //please always fill the cell by this function to maintain code in one place
+    [self.topicID setText:model.ID];
+    [self.topicTitle setText:model.Title];
+    
+    if([model.AllImgs count]<=0)
+        [self.topicImage setHidden:YES];
+    else
+        [self.topicImage setImage:[UIImage imageNamed:[model.AllImgs objectAtIndex:0]]]; //setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.mstaml.com/imagesData/%@", [model.AllImgs objectAtIndex:0] ]]];
+    
+}
+
 @end

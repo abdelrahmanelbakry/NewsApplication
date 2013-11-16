@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TopicModel.h"
 
 @interface HeadlineCell : UITableViewCell
 
+
+@property (weak, nonatomic) IBOutlet UILabel *topicID;
+@property (weak, nonatomic) IBOutlet UILabel *topicTitle;
+@property (weak, nonatomic) IBOutlet UIImageView *topicImage;
+
+-(void)setCellDataWith:(TopicModel *)model;
 @end

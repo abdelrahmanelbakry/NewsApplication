@@ -1,0 +1,41 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 kol elle me7tag te3melo\
+1- ennak t create app mn developers.facebook mn el account bta3ak aw bta3 el sherka aw whatever, samme el app b ay esm, yosta7san ya3ne yeb2a nafs el esm bta3 el iOS app\
+\
+2-efta7 el app de, hatla2e two ids keda hata5od el App ID/API Key da copy\
+3- open FBApiWrapper.m  ,hatla2e const fooo2 esmo appId  , paste ba2a fel variable da\
+\
+4- open the target information -> add new URL type.\
+-in URLschema -> write (fb"the copied variable") \
+5-open AppDelegate.m\
+implement these 2 functions\
+\
+ - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url \{\
+    return [[FBAPIWrapper sharedWrapper] facebookHandleOpenUrl:url];\
+\}\
+\
+\
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation \{\
+    return [[FBAPIWrapper sharedWrapper] facebookHandleOpenUrl:url];\
+    \
+\}\
+\
+5-\
+ any class that does sharing through facebook  just import FBApiWrapper.h\
+ then in the share IBAction\
+[[FBAPIWrapper sharedWrapper] shareWith....];\
+\
+\
+\
+for more information\
+ https://developers.facebook.com/docs/mobile/ios/build/\
+open this link\
+command+f\
+ write in the search "Modify the app property list file"\
+and follow the paragraph behind it\
+it will also give you a graphical illustration}

@@ -66,7 +66,6 @@
         Author=[NSString stringWithFormat:@""];
         Date=@"";
         SectionName=@"";
-        // AllImgs = [[NSMutableArray alloc]init];
         NumberOfReadings=@"";
         NumberOfViews=@"";
         

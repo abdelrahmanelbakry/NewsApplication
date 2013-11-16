@@ -7,7 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DetailViewController.h"
+#import "HeadlineCell.h"
+#import "AppSharer.h"
+#import "TwitterShare.h"
+#import "TopicModel.h"
+#import "NetworkOperations.h"
+#import "Reachability.h"
+#import "SVPullToRefresh.h"
 
 @interface HeadLineViewController : UITableViewController
+{
+    Reachability *reach;
+    NSMutableData* receivedData;
+}
 
+-(void) loadHeadlines;
+-(void) loadMoreHeadlines;
 @end
