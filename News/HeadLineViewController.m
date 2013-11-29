@@ -11,6 +11,7 @@
 #define HEADLINE1 @"خضيرة يصاب بقطع في الرباط الصليبي ويغيب ستة أشهر"
 #define HEADLINE2 @"فالكاو سعيد في موناكو"
 
+#define HEADLINE_URL @"http://young-journey-4873.herokuapp.com/"
 
 @interface HeadLineViewController ()
 {
@@ -22,6 +23,7 @@
 
 @implementation HeadLineViewController
 
+@synthesize categroyID;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -35,7 +37,6 @@
 {
     [super viewDidLoad];
     
-   
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -102,24 +103,26 @@
 
 -(void) loadHeadlines
 {
-    TopicModel* tmpModel1 = [[TopicModel alloc]init];
-    tmpModel1. Title = HEADLINE1;
-    tmpModel1.AllImgs =[[NSMutableArray alloc]init];
-    [tmpModel1.AllImgs addObject:@"img1.jpg"];
-    tmpModel1.ID = @"1";
-    [self AddToTopics: tmpModel1];
-    
-    TopicModel* tmpModel2 = [[TopicModel alloc]init];
-    tmpModel2. Title = HEADLINE2;
-    tmpModel2.AllImgs =[[NSMutableArray alloc]init];
-    [tmpModel2.AllImgs addObject:@"img2.jpg"];
-    tmpModel2.ID = @"2";
-    [self AddToTopics: tmpModel2];
+    [self LoadData];
+//    TopicModel* tmpModel1 = [[TopicModel alloc]init];
+//    tmpModel1. Title = HEADLINE1;
+//    tmpModel1.AllImgs =[[NSMutableArray alloc]init];
+//    [tmpModel1.AllImgs addObject:@"img1.jpg"];
+//    tmpModel1.ID = @"1";
+//    [self AddToTopics: tmpModel1];
+//    
+//    TopicModel* tmpModel2 = [[TopicModel alloc]init];
+//    tmpModel2. Title = HEADLINE2;
+//    tmpModel2.AllImgs =[[NSMutableArray alloc]init];
+//    [tmpModel2.AllImgs addObject:@"img2.jpg"];
+//    tmpModel2.ID = @"2";
+//    [self AddToTopics: tmpModel2];
 
    // [tempHeadlines addObject:tmpModel1];
     //[tempHeadlines addObject:tmpModel2];
     
-    [self.tableView reloadData];
+    
+   // [self.tableView reloadData];
 }
 
 -(void) loadMoreHeadlines
@@ -127,7 +130,7 @@
     
 }
 
--(void)LoadAds
+-(void)LoadData
 {
     
     if (reach.isReachable)
@@ -138,15 +141,16 @@
                 //1- get the favorite topics
                 //NSDictionary * favs= [[NSUserDefaults standardUserDefaults] objectForKey:@"favTopics"];
                 //2- set up the topics array
-                for (NSDictionary* dic in [response objectForKey:@"news"])
+                for (NSDictionary* dic in [response objectForKey:@"headlines"])
                 {
                     TopicModel* tmpModel=[[TopicModel alloc]init];
                     tmpModel.AllImgs = [[NSMutableArray alloc]init];
                     [tmpModel.AllImgs addObject:[dic objectForKey:@"img"]!=[NSNull null]?[dic objectForKey:@"img"]:@""];
                     tmpModel.Date=[dic objectForKey:@"date"]!=[NSNull null]?[dic objectForKey:@"date"]:@"";
                     tmpModel.ID=[dic objectForKey:@"id"]!=[NSNull null]?[dic objectForKey:@"id"]:@"";
-                    tmpModel.Title=[dic objectForKey:@"headline"]!=[NSNull null]?[dic objectForKey:@"headline"]:@"";
-                    
+                    tmpModel.Title=[dic objectForKey:@"title"]!=[NSNull null]?[dic objectForKey:@"title"]:@"";
+                    tmpModel.SectionName = [dic objectForKey:@"categoryId"]!=[NSNull null]?[dic objectForKey:@"categoryId"]:@"";
+                    [self AddToTopics:tmpModel];
                 }
                 [self.tableView reloadData];
                 
@@ -178,16 +182,14 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 2;
+    return [tempHeadlines count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

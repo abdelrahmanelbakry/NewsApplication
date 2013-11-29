@@ -37,7 +37,7 @@
     if([model.AllImgs count]<=0)
         [self.topicImage setHidden:YES];
     else
-        [self.topicImage setImage:[UIImage imageNamed:[model.AllImgs objectAtIndex:0]]]; //setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.mstaml.com/imagesData/%@", [model.AllImgs objectAtIndex:0] ]]];
+        [self.topicImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [model.AllImgs objectAtIndex:0] ]]];
     
 }
 

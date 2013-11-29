@@ -18,10 +18,12 @@
  *
  * change this to be the name of the Base URL of your server.
  */
-NSString * const kNetworkBaseURLString = @"http://www.mstaml.com/mobileajax.php";
+NSString * kNetworkBaseURLString = @"http://young-journey-4873.herokuapp.com/";
 
 
 @interface NetworkOperations ()
+
+
 
 +(NSMutableURLRequest *)requestWithMethod:(HTTPRequestMethod)requestMethod
                             andParameters:(NSDictionary *)parameters;
@@ -60,6 +62,8 @@ NSString * const kNetworkBaseURLString = @"http://www.mstaml.com/mobileajax.php"
 
 #pragma mark -
 #pragma mark - Public API
+
+
 +(AFHTTPRequestOperation *)operationWithParamerters:(NSDictionary *)parameters requestMethod:(HTTPRequestMethod)requestMethod andSuccessBlock:(void (^)(id))success {
     
     NSMutableURLRequest *request = [self requestWithMethod:requestMethod andParameters:parameters];

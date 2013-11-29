@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TopicModel.h"
+#import "NetworkOperations.h"
 
 @interface HeadlineCell : UITableViewCell
 

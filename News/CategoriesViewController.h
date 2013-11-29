@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NetworkOperations.h"
+#import "Reachability.h"
+#import "TopicModel.h"
+#import "HeadLineViewController.h"
 
 @interface CategoriesViewController : UITableViewController
+{
+    Reachability *reach;
+    NSMutableData* receivedData;
+}
+
 
 @end

@@ -15,6 +15,9 @@
 #define HEADLINE1 @"خضيرة يصاب بقطع في الرباط الصليبي ويغيب ستة أشهر"
 #define HEADLINE2 @"فالكاو سعيد في موناكو"
 
+
+#define HEADLINE_URL @"http://young-journey-4873.herokuapp.com/"
+
 @interface DetailViewController ()
 
 @end
@@ -40,7 +43,7 @@
 	// Do any additional setup after loading the view.
     //hide the navigation bar
     //[self.navigationController setNavigationBarHidden:YES];
-    
+
     [self getCurrentTopicData];
 }
 
@@ -52,25 +55,20 @@
 
 -(void) updateLayout
 {
-    if(self.topicID==1)
-    {
-        [self.topicContent setText:TOPIC1_CONTENT];
-        [self.topicImg setImage:[UIImage imageNamed:@"img1.jpg"]];
-        [self.topicTitle setText:HEADLINE1];
-    }
-    else
-    {
-        [self.topicContent setText:TOPIC2_CONTENT];
-        [self.topicImg setImage:[UIImage imageNamed:@"img2.jpg"]];
-        [self.topicTitle setText:HEADLINE2];
-
-    }
+   // if(self.topicID==1)
+  //  {
+    
+  //  }
+    
+    [self.topicContent setText:self.topicDataModel.Content];
+    [self.topicImg setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [self.topicDataModel.AllImgs objectAtIndex:0] ]]];
+    [self.topicTitle setText:self.topicDataModel.Title];
+    
 }
 #pragma mark Data Loading functions
 -(void)getCurrentTopicData{
  
-  //  [self LoadTopicData];
-    [self updateLayout];
+    [self LoadTopicData];
 
 }
 
@@ -84,7 +82,7 @@
     
     [Query setObject:[NSNumber numberWithInt:currentAd] forKey:@"i"];
     */
-    
+   
     return Query;
 }
 
@@ -94,25 +92,29 @@
     
     self.topicDataModel.AllImgs = [[NSMutableArray alloc]init];
     
-    for ( int i=0; i< [[[response objectForKey:@"detail"] objectForKey:@"imgs"] count]; i++)
-    {
-        [topicDataModel.AllImgs addObject:[[[response objectForKey:@"detail"] objectForKey:@"imgs"] objectAtIndex:i]];
+   // for ( int i=0; i< [[response  objectForKey:@"img"] count]; i++)
+   // {
+  //  [self.topicDataModel.AllImgs addObject:[[response objectForKey:@"img"] objectAtIndex:0]];
         
-    }
-    topicDataModel.Date=[[response objectForKey:@"detail"] objectForKey:@"post"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"post"]:@"";
-    topicDataModel.ID=[[response objectForKey:@"detail"] objectForKey:@"id"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"id"]:@"";
-    topicDataModel.Title=[[response objectForKey:@"detail"] objectForKey:@"title"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"title"]:@"";
-    topicDataModel.Author=[[response objectForKey:@"detail"] objectForKey:@"author"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"author"]:@"";
-        topicDataModel.NumberOfViews = [[response objectForKey:@"detail"] objectForKey:@"read"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"read"]:@"";
-    topicDataModel.NumberOfReadings = [[response objectForKey:@"detail"] objectForKey:@"readbody"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"readbody"]:@"";
+   // }
     
-    topicDataModel.Content = ![[[response objectForKey:@"detail"] objectForKey:@"body"]isKindOfClass:[NSNull class]]?[[response objectForKey:@"detail"] objectForKey:@"body"]:@"";
-    topicDataModel.SectionName = ![[[response objectForKey:@"detail"] objectForKey:@"section"]isKindOfClass:[NSNull class]]?[[response objectForKey:@"detail"] objectForKey:@"section"]:@"";
+     [self.topicDataModel.AllImgs addObject:[response objectForKey:@"img"]!=[NSNull null]?[response objectForKey:@"img"]:@""];
+//    topicDataModel.Date=[[response objectForKey:@"detail"] objectForKey:@"post"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"post"]:@"";
+    topicDataModel.ID=[response  objectForKey:@"id"]!=[NSNull null]?[response  objectForKey:@"id"]:@"";
+    topicDataModel.Title=[response  objectForKey:@"title"]!=[NSNull null]?[response  objectForKey:@"title"]:@"";
+//    topicDataModel.Author=[[response objectForKey:@"detail"] objectForKey:@"author"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"author"]:@"";
+//    topicDataModel.NumberOfViews = [[response objectForKey:@"detail"] objectForKey:@"read"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"read"]:@"";
+//    topicDataModel.NumberOfReadings = [[response objectForKey:@"detail"] objectForKey:@"readbody"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"readbody"]:@"";
+    
+    topicDataModel.Content = ![[response  objectForKey:@"details"]isKindOfClass:[NSNull class]]?[response  objectForKey:@"details"]:@"";
+    
+//    topicDataModel.SectionName = ![[response  objectForKey:@"section"]isKindOfClass:[NSNull class]]?[response  objectForKey:@"section"]:@"";
 }
 -(void) LoadTopicData
 {
-    
-    [NetworkOperations operationWithParamerters:[self constructquery] requestMethod:HTTPRequestMethodGET successBlock:^(id response){
+    NSString* strURL = [NSString stringWithFormat:@"%@details/%i",HEADLINE_URL,topicID];
+
+    [NetworkOperations operationWithFullURL:strURL parameters:[self constructquery] requestMethod:HTTPRequestMethodGET successBlock:^(id response){
         if ([response count]>0) {
             NSLog(@"Sections data response : %@",response);
             [self parseResponse:response];

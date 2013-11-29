@@ -21,6 +21,7 @@
     Reachability *reach;
     NSMutableData* receivedData;
 }
+@property(nonatomic) int categroyID;
 
 -(void) loadHeadlines;
 -(void) loadMoreHeadlines;
