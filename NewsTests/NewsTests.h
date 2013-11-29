@@ -7,7 +7,10 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "ViewController.h"
 
 @interface NewsTests : SenTestCase
+
+@property (strong, nonatomic) ViewController *controller;
 
 @end

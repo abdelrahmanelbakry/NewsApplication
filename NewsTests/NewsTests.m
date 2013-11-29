@@ -9,12 +9,16 @@
 #import "NewsTests.h"
 
 @implementation NewsTests
+@synthesize controller;
 
 - (void)setUp
 {
     [super setUp];
     
     // Set-up code here.
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+    self.controller = [storyboard instantiateViewControllerWithIdentifier:@"Main"];
+    [self.controller performSelectorOnMainThread:@selector(loadView) withObject:nil waitUntilDone:YES];
 }
 
 - (void)tearDown
@@ -24,9 +28,10 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)UICategoryTest
 {
-    STFail(@"Unit tests are not implemented yet in NewsTests");
+    //STFail(@"Unit tests are not implemented yet in NewsTests");
+   
 }
 
 @end

@@ -158,7 +158,7 @@
         <!--Navigation Controller-->
         <scene sceneID="cVI-2a-Cp3">
             <objects>
-                <navigationController definesPresentationContext="YES" id="U6k-Fv-oHr" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="Main" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="U6k-Fv-oHr" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QhV-gw-WpJ">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
