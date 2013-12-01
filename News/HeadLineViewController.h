@@ -20,6 +20,7 @@
 {
     Reachability *reach;
     NSMutableData* receivedData;
+    NSMutableSet* providersSet;
 }
 @property(nonatomic) int categroyID;
 

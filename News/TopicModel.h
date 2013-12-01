@@ -11,6 +11,7 @@
 @interface TopicModel : NSObject
 
 @property(nonatomic, retain)  NSString *ID;
+@property(nonatomic, retain)  NSString *ProviderID;
 @property(nonatomic, retain)  NSString *Title;
 @property(nonatomic, retain)  NSString *Content;
 @property(nonatomic, retain)  NSString *Author;
@@ -20,5 +21,5 @@
 @property(nonatomic,retain)   NSString *topicLink;
 @property(nonatomic,retain)   NSString* NumberOfViews;
 @property(nonatomic,retain)   NSString* NumberOfReadings;
-
+@property(nonatomic) BOOL isDisplayed;
 @end

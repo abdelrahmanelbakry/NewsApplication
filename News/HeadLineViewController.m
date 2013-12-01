@@ -16,6 +16,7 @@
 @interface HeadLineViewController ()
 {
     NSMutableArray * tempHeadlines;
+    NSMutableDictionary* groupedHeadlines;
     int currentPageNumber;
 }
 
@@ -44,6 +45,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     tempHeadlines = [[NSMutableArray alloc]init];
     
+    groupedHeadlines = [[NSMutableDictionary alloc]init];
     reach = [Reachability reachabilityForInternetConnection];
     [reach startNotifier];
     
@@ -68,61 +70,11 @@
 }
 
 #pragma mark - Load Data Functions
-//Constructing the Query String
--(NSDictionary*) constructQuery
-{
-    
-    NSMutableDictionary* Query = [[NSMutableDictionary alloc]init];
-    /*[Query setObject:[NSString stringWithFormat:@"%i",currentPageNumber] forKey:@"p"];
-    
-    [Query setObject:@"ads" forKey:@"operation"];
-    
-    if([sectionID integerValue]!=-1 && [subSectionID integerValue]!=-1)
-        [Query setObject:[NSString stringWithFormat:@"%@",subSectionID] forKey:@"t"];
-    else if([sectionID integerValue]!=-1)
-        [Query setObject:sectionID forKey:@"t"];
-    
-    if([modelID integerValue]!=-1 && [subModelID integerValue]!=-1)
-        [Query setObject:subModelID forKey:@"m"];
-    else if([modelID integerValue]!=-1)
-        [Query setObject:modelID forKey:@"m"];
-    
-    
-    
-    if([locationID integerValue]!=-1)
-        [Query setObject:locationID forKey:@"l"];
-    if([periodID integerValue]!=-1)
-        [Query setObject:periodID forKey:@"d"];
-    if([order integerValue]!=-1)
-        [Query setObject:order forKey:@"o"];*/
-    
-    
-    return Query;
-}
-
 
 -(void) loadHeadlines
 {
     [self LoadData];
-//    TopicModel* tmpModel1 = [[TopicModel alloc]init];
-//    tmpModel1. Title = HEADLINE1;
-//    tmpModel1.AllImgs =[[NSMutableArray alloc]init];
-//    [tmpModel1.AllImgs addObject:@"img1.jpg"];
-//    tmpModel1.ID = @"1";
-//    [self AddToTopics: tmpModel1];
-//    
-//    TopicModel* tmpModel2 = [[TopicModel alloc]init];
-//    tmpModel2. Title = HEADLINE2;
-//    tmpModel2.AllImgs =[[NSMutableArray alloc]init];
-//    [tmpModel2.AllImgs addObject:@"img2.jpg"];
-//    tmpModel2.ID = @"2";
-//    [self AddToTopics: tmpModel2];
 
-   // [tempHeadlines addObject:tmpModel1];
-    //[tempHeadlines addObject:tmpModel2];
-    
-    
-   // [self.tableView reloadData];
 }
 
 -(void) loadMoreHeadlines
@@ -135,7 +87,7 @@
     
     if (reach.isReachable)
     {
-        [NetworkOperations operationWithParamerters:[self constructQuery]  requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+        [NetworkOperations operationWithParamerters:nil  requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
             if (response.count >0)
             {
                 //1- get the favorite topics
@@ -148,6 +100,7 @@
                     [tmpModel.AllImgs addObject:[dic objectForKey:@"img"]!=[NSNull null]?[dic objectForKey:@"img"]:@""];
                     tmpModel.Date=[dic objectForKey:@"date"]!=[NSNull null]?[dic objectForKey:@"date"]:@"";
                     tmpModel.ID=[dic objectForKey:@"id"]!=[NSNull null]?[dic objectForKey:@"id"]:@"";
+                    tmpModel.ProviderID=[dic objectForKey:@"providerId"]!=[NSNull null]?[dic objectForKey:@"providerId"]:@"";
                     tmpModel.Title=[dic objectForKey:@"title"]!=[NSNull null]?[dic objectForKey:@"title"]:@"";
                     tmpModel.SectionName = [dic objectForKey:@"categoryId"]!=[NSNull null]?[dic objectForKey:@"categoryId"]:@"";
                     [self AddToTopics:tmpModel];
@@ -174,36 +127,78 @@
     ad.NumberOfReadings = newAd.NumberOfReadings;//[values objectAtIndex:16];
     ad.Title = newAd.Title;//[values objectAtIndex:22];
     ad.Author = newAd.Author;//[values objectAtIndex:26];
+    ad.ProviderID = newAd.ProviderID;
+    ad.isDisplayed = newAd.isDisplayed;
     
+    if([groupedHeadlines objectForKey:ad.ProviderID]!=nil)
+    {
+        [[groupedHeadlines objectForKey:ad.ProviderID] addObject:ad];
+    }
+    else
+    {
+        [groupedHeadlines setObject:[NSMutableArray arrayWithObject:ad] forKey:ad.ProviderID];
+    }
     [tempHeadlines addObject:ad];
     
 }
-#pragma mark - Table view data source
 
+#pragma mark - Table view data source
+-(NSInteger) getNumberofProviders
+{
+    providersSet = [[NSMutableSet alloc]init];
+    for(int i=0; i<[tempHeadlines count];i++)
+    {
+        TopicModel* tmpModel = (TopicModel*)[tempHeadlines objectAtIndex:i];
+        if(![providersSet containsObject:tmpModel.ProviderID])
+            [providersSet addObject: tmpModel.ProviderID];
+    }
+    
+    return [providersSet count];
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return [self getNumberofProviders];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    NSArray* providers = [providersSet allObjects];
     // Return the number of rows in the section.
-    return [tempHeadlines count];
+    return [[groupedHeadlines objectForKey:[providers objectAtIndex:section]] count];//[tempHeadlines count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"headLineCell";
     HeadlineCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
+    NSArray* providers = [providersSet allObjects];
     
-    [cell setCellDataWith:[tempHeadlines objectAtIndex:indexPath.row]];
-
+    NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]];
+    
+    for(int i=0;i<[headlines count];i++)
+    {
+        TopicModel* tmpModel = (TopicModel*) [headlines objectAtIndex:i];
+        if(!tmpModel.isDisplayed)
+        {
+            [cell setCellDataWith:tmpModel ];
+            
+            [[groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]] removeObject:tmpModel];
+            tmpModel.isDisplayed = YES;
+            [self AddToTopics:tmpModel];
+            
+            break;
+        }
+    }
     // Configure the cell...
     
     return cell;
 }
 
+-(NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [NSString stringWithFormat:@"Provider # %i",section+1];
+}
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

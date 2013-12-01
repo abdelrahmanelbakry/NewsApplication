@@ -19,9 +19,11 @@
 @synthesize AllImgs;
 @synthesize NumberOfReadings;
 @synthesize NumberOfViews;
-
+@synthesize ProviderID;
+@synthesize isDisplayed;
 
 #define kAdId            @"ID"
+#define kProviderId      @"ProviderID"
 #define kAdTitle         @"title"
 #define kAdSecName       @"SectionName"
 #define kAdDate          @"Date"
@@ -31,13 +33,14 @@
 #define kAdNViews        @"NumberOfViews"
 #define kAdNRead         @"NumberOfReads"
 #define kAdLink          @"topiclink"
-
+#define kisDisplayed     @"isDisplayed"
 
 
 //
 - (void) encodeWithCoder:(NSCoder *)encoder
 {
     [encoder encodeObject:ID forKey:kAdId];
+    [encoder encodeObject:ProviderID forKey:kProviderId];
     [encoder encodeObject:Title forKey:kAdTitle];
     [encoder encodeObject:Content forKey:kAdContent];
     [encoder encodeObject:Author forKey:kAdAuthor];
@@ -50,7 +53,7 @@
     [encoder encodeObject:NumberOfViews forKey:kAdNViews];
     [encoder encodeObject:NumberOfReadings forKey:kAdNRead];
     
-    
+    [encoder encodeBool:isDisplayed forKey:kisDisplayed];
     
     
 }
@@ -68,7 +71,8 @@
         SectionName=@"";
         NumberOfReadings=@"";
         NumberOfViews=@"";
-        
+        ProviderID=@"";
+        isDisplayed = NO;
     }
     return self;
 }
@@ -89,6 +93,9 @@
         topicLink = [decoder decodeObjectForKey:kAdLink];
         NumberOfReadings = [decoder decodeObjectForKey:kAdNRead];
         NumberOfViews = [decoder decodeObjectForKey:kAdNViews];
+        
+        ProviderID = [decoder decodeObjectForKey:kProviderId];
+        isDisplayed = [decoder decodeBoolForKey:kisDisplayed];
     }
     
     return self;
