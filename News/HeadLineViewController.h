@@ -15,15 +15,25 @@
 #import "NetworkOperations.h"
 #import "Reachability.h"
 #import "SVPullToRefresh.h"
+#import <Social/Social.h>
+#import <Twitter/Twitter.h>
+#import <MessageUI/MessageUI.h>
+#import <Accounts/Accounts.h>
+#import "AppSharer.h"
+#import "TwitterShare.h"
 
-@interface HeadLineViewController : UITableViewController
+@interface HeadLineViewController : UITableViewController<UIActionSheetDelegate>
 {
     Reachability *reach;
     NSMutableData* receivedData;
     NSMutableSet* providersSet;
+    SLComposeViewController *mySLComposerSheet;
+    int selectedTopic;
+
 }
 @property(nonatomic) int categroyID;
 
 -(void) loadHeadlines;
 -(void) loadMoreHeadlines;
+-(IBAction)shareTopic:(id)sender;
 @end

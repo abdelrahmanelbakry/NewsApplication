@@ -243,16 +243,252 @@
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"ViewTopicSegueIdentifier"]) {
-        TopicModel * topic=[tempHeadlines objectAtIndex:[self.tableView indexPathForCell:sender].row] ;
+    NSArray* providers = [providersSet allObjects];
+    if ([segue.identifier isEqualToString:@"ViewTopicSegueIdentifier"])
+    {
+        NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:[self.tableView indexPathForCell:sender].section]];
 
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    DetailViewController* detailVC = segue.destinationViewController;
-    detailVC.topicID = [topic.ID intValue];
+        TopicModel * topic= [headlines objectAtIndex:[self.tableView indexPathForCell:sender].row];//[groupedHeadlines objectAtIndex:[self.tableView indexPathForCell:sender].row] ;
+
+        // Get the new view controller using [segue destinationViewController].
+        // Pass the selected object to the new view controller.
+        DetailViewController* detailVC = segue.destinationViewController;
+        detailVC.topicID = [topic.ID intValue];
     }
 }
 
+#pragma mark -Sharing Code
+-(IBAction)shareTopic:(id)sender
+{
+    UIButton* btnSender = (UIButton*) sender;
+    selectedTopic= btnSender.tag;
+    //share
+    [self showActionSheet];
+    
+}
+//===============================================================
+//Sharing Code
+//===============================================================
+- (void)showActionSheet
+{
+    NSString *actionSheetTitle = @"اختر كيفية المشاركة"; //Action Sheet Title
+    NSString *other1 = @"مشاركة عبر الفيس بوك";
+    NSString *other2 = @"مشاركة عبر تويتر";
+    NSString *cancelTitle = @"إلغاء";
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:actionSheetTitle
+                                  delegate:self
+                                  cancelButtonTitle:cancelTitle
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:other1, other2, nil];
+    [actionSheet showInView:self.view];
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex)
+    {
+        case 0:
+            [self shareAtFB];
+            break;
+        case 1:
+            [self shareAtTwitter];
+            break;
+    }
+    
+}
+-(void) shareAtFB
+{
+    ///////////////////Facebook Share Code
+    if ([[[UIDevice currentDevice] systemVersion] intValue]>=6) {
+        
+        if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) //check if Facebook Account is linked
+        {
+            mySLComposerSheet = [[SLComposeViewController alloc] init]; //initiate the Social Controller
+            mySLComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook]; //Tell him with what social plattform to use it, e.g. facebook or twitter
+            [mySLComposerSheet setInitialText:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%@",selectedTopic]];
+            [mySLComposerSheet setCompletionHandler:^(SLComposeViewControllerResult result) {
+                NSString *output=@"";
+                switch (result) {
+                    case SLComposeViewControllerResultDone:
+                        output = @"تم النشر";
+                        break;
+                    default:
+                        break;
+                } //check if everythink worked properly. Give out a message on the state.
+                if (output.length>0) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                    [alert show];
+                }
+                
+            }];
+            
+            //the message you want to post
+            //[mySLComposerSheet addImage:nil];
+            //an image you could post
+            //for more instance methodes, go here:https://developer.apple.com/library/ios/#documentation/NetworkingInternet/Reference/SLComposeViewController_Class/Reference/Reference.html#//apple_ref/doc/uid/TP40012205
+            [self presentViewController:mySLComposerSheet animated:YES completion:nil];
+        }else{
+            
+            [AppSharer postOnFacebookURL:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%d",selectedTopic] withName:@"" caption:@"" description:@"" andImageURL:nil completionHandler:nil];
+        }
+    }else{
+        [AppSharer postOnFacebookURL:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%d",selectedTopic] withName:@"" caption:@"" description:@"" andImageURL:nil completionHandler:^(BOOL success, NSError *error) {}];
+    }
+}
+-(void) shareAtTwitter
+{
+    NSError *jsonError = nil;
+    
+    //NSString *jsonRequest=[NSString stringWithFormat:@"{\"receipt-data\":\"%@\"}",receiptBase64];
+    
+    //NSLog(@"Sending this JSON: %@",jsonRequest);
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%d",selectedTopic],@"longUrl",nil] options:NSJSONWritingPrettyPrinted error:&jsonError];
+    
+    NSLog(@"JSON: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] );
+    
+    // URL for sandbox receipt validation; replace "sandbox" with "buy" in production or you will receive
+    
+    // error codes 21006 or 21007
+    
+    NSURL *requestURL = [NSURL URLWithString:@"https://www.googleapis.com/urlshortener/v1/url"];
+    
+    
+    
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:requestURL];
+    
+    [req setHTTPMethod:@"POST"];
+    
+    [req setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    
+    
+    [req setHTTPBody:jsonData];
+    
+    
+    
+    NSURLConnection *tweetconn = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    
+    
+    
+    if(tweetconn) {
+        
+        receivedData = [[NSMutableData alloc]init];
+        
+    }
+    
+}
+
+-(BOOL)isTwitterAvailable
+{
+    return NSClassFromString(@"TWTweetComposeViewController") != nil;
+}
+
+-(BOOL)isSocialAvailable
+{
+    return NSClassFromString(@"SLComposeViewController") != nil;
+}
+
+
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    
+    NSLog(@"Cannot transmit receipt data. %@",[error localizedDescription]);
+    
+}
+
+
+
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    [receivedData setLength:0];
+}
+
+
+
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [receivedData appendData:data];
+    
+    NSLog(@"JSON: %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    
+}
+
+-(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    
+    NSString *response = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"iTunes response: %@",response);
+    
+    NSLog(@"%@",[[[[[response componentsSeparatedByString:@"id\":"] objectAtIndex:1]componentsSeparatedByString:@"\","]objectAtIndex:0]stringByReplacingOccurrencesOfString:@"\"" withString:@""]) ;
+    
+    NSString*x=[[[[[response componentsSeparatedByString:@"id\":"] objectAtIndex:1]componentsSeparatedByString:@"\","]objectAtIndex:0]stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+    
+    NSLog(@"%@",[[response componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@",:"]] objectAtIndex:3]);
+    
+    [self contTweet:x];
+    
+}
+
+
+
+-(void)contTweet:(NSString*)shortURL{
+    
+    NSLog(@"short url : %@",shortURL);
+    
+    if ([self isSocialAvailable]) {
+        
+        NSLog(@"ert");
+        
+        if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter])
+            
+        {
+            
+            SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+            
+          //  NSString* tweetStr=[NSString stringWithFormat:@"%@ \n %@ \n   %@  ", selectedAd.Title.length>0? selectedAd.Title:selectedAd.Content,shortURL,@"#mostaml"];//selectedForumName
+            
+         //   NSLog(@"ios 6 twitter string : %@ ",tweetStr);
+            
+          //  [tweetSheet setInitialText:tweetStr];
+            
+            [self presentViewController:tweetSheet animated:YES completion:nil];
+            
+        }
+        
+        else
+            
+        {
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"عفوا" message:@"لا يمكن ارسال التغريدة حاليا,من فضلك تأكد من الاتصال بالانترنت و وجود حساب تويتر معرف على الاقل " delegate:self cancelButtonTitle:@"تم" otherButtonTitles:nil];
+            
+            [alertView show];
+            
+        }
+        
+        
+        
+    } else{
+        
+        TwitterShare *twitterShare = [[TwitterShare alloc] owner:self];
+        
+        NSString* imgStr=@"";
+        
+        //  if (adDataModel.AllImgs.count>0) {
+        
+        //       imgStr=[adDataModel.AllImgs objectAtIndex:0];
+        
+        //   }
+        
+    //    NSString* tweetStr=[NSString stringWithFormat:@"%@ \n %@ \n   %@  ", selectedAd.Title.length>0? selectedAd.Title:selectedAd.Content,shortURL,@"#mostaml"];//selectedForumName
+        
+       // NSLog(@"ios 5 twitter string : %@ ",tweetStr);
+        
+       // [twitterShare TweetWithImageString:imgStr.length>0?imgStr:nil Link:shortURL Text:tweetStr];
+        
+    }
+    
+}
 
 
 @end

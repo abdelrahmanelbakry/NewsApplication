@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *topicID;
 @property (weak, nonatomic) IBOutlet UILabel *topicTitle;
 @property (weak, nonatomic) IBOutlet UIImageView *topicImage;
+@property (weak, nonatomic) IBOutlet UIButton *btnShare;
 
 -(void)setCellDataWith:(TopicModel *)model;
 @end

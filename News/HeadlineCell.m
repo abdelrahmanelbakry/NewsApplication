@@ -38,7 +38,7 @@
         [self.topicImage setHidden:YES];
     else
         [self.topicImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [model.AllImgs objectAtIndex:0] ]]];
-    
+    self.btnShare.tag = [model.ID intValue];
 }
 
 @end
