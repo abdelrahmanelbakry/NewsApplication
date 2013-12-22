@@ -11,7 +11,7 @@
 @interface ProviderModel : NSObject<NSCoding>
 
 
-@property(nonatomic, retain)  NSString *ID;
+@property(nonatomic)  int ID;
 @property(nonatomic, retain)  NSString *Title;
 @property(nonatomic, retain)  NSString *Image;
 @property(nonatomic, retain)  NSString *URL;

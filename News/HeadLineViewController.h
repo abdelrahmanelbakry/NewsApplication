@@ -21,6 +21,8 @@
 #import <Accounts/Accounts.h>
 #import "AppSharer.h"
 #import "TwitterShare.h"
+#import "ProvidersManager.h"
+
 
 @interface HeadLineViewController : UITableViewController<UIActionSheetDelegate>
 {
@@ -29,6 +31,7 @@
     NSMutableSet* providersSet;
     SLComposeViewController *mySLComposerSheet;
     int selectedTopic;
+    TopicModel* sharedTopic;
 
 }
 @property(nonatomic) int categroyID;

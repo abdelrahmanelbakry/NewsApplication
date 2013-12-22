@@ -16,8 +16,9 @@
 #import "AppSharer.h"
 #import "TwitterShare.h"
 #import "TopicModel.h"
+#import "HeadlineCell.h"
 
-@interface DetailViewController : UIViewController
+@interface DetailViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic) int topicID;
 @property (nonatomic,retain) TopicModel* topicDataModel;
@@ -26,5 +27,11 @@
 @property(nonatomic,retain) IBOutlet UILabel* topicTitle;
 @property(nonatomic,retain) IBOutlet UILabel* topicContent;
 @property(nonatomic,retain) IBOutlet UIImageView* topicImg;
+
+
+@property(nonatomic,retain) IBOutlet UITableView* mytableView;
+
+
+-(IBAction)LoadNewTopic:(id)sender;
 
 @end

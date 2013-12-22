@@ -22,5 +22,10 @@
 
 -(void) serializeProviders;
 -(BOOL) deserializeProviders;
+-(BOOL) providerExists:(int) providerID;
+-(void) removeProviderByID :(int) providerID;
+-(void) setIsSelected: (int) providerID withValue:(BOOL) selectionValue;
+-(ProviderModel*) getProviderModel:(int) providerID;
+
 
 @end

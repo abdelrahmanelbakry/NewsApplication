@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ProvidersManager.h"
+#import "AppSharer.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

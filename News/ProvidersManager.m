@@ -29,19 +29,70 @@ ProvidersManager* manager =  nil;
     
     return manager;
 }
-
+-(ProviderModel*) getProviderModel:(int) providerID
+{
+    for(int i=0;i< [[[ProvidersManager getProvidersManager] providers] count];i++)
+    {
+        ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:i];
+        if(providerID == provider.ID)
+        {
+            return provider;
+            break;
+        }
+    }
+    return nil;
+}
 
 -(void) addProvider:(ProviderModel*) newData
 {
-    ProviderModel* data = [[ProviderModel alloc]init];
-    data.ID = newData.ID;
-    data.Image = newData.Image;
-    data.Title = newData.Title;
-    data.URL = newData.URL;
-    
-    [providers addObject:data];
+    if(![[ProvidersManager getProvidersManager] providerExists:newData.ID])
+    {
+        ProviderModel* data = [[ProviderModel alloc]init];
+        data.ID = newData.ID;
+        data.Image = newData.Image;
+        data.Title = newData.Title;
+        data.URL = newData.URL;
+        data.IsSelected = newData.IsSelected;
+        [providers addObject:data];
+
+    }
 }
 
+-(void) removeProviderByID :(int) providerID
+{
+    for(int i=0;i< [[[ProvidersManager getProvidersManager] providers] count];i++)
+    {
+        ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:i];
+        if(providerID == provider.ID)
+        {
+            [[[ProvidersManager getProvidersManager] providers] removeObjectAtIndex:i];
+            break;
+        }
+    }
+
+}
+
+-(void) setIsSelected: (int) providerID withValue:(BOOL) selectionValue
+{
+    
+    for(int i=0;i< [[[ProvidersManager getProvidersManager] providers] count];i++)
+    {
+        ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:i];
+         if(providerID == provider.ID)
+             provider.IsSelected = selectionValue;
+        
+    }
+}
+-(BOOL) providerExists:(int) providerID
+{
+    for(int i=0;i< [[[ProvidersManager getProvidersManager] providers] count];i++)
+    {
+        ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:i];
+        if(providerID == provider.ID)
+            return YES;
+    }
+    return NO;
+}
 
 -(void) serializeProviders
 {

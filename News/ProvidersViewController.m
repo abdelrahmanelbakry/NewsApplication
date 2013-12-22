@@ -40,57 +40,28 @@
     reach = [Reachability reachabilityForInternetConnection];
     [reach startNotifier];
     
-    [self LoadData];
+ //   [self LoadData];
+    
+    NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+    [userdefaults setBool:NO forKey:@"firstlaunch"];
+    [userdefaults synchronize];
+
 }
 
 
 #pragma mark - Loading data functions
-
--(void)LoadData
-{
-    
-    if (reach.isReachable)
-    {
-        [NetworkOperations operationWithFullURL:@"http://young-journey-4873.herokuapp.com/provider" parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
-            if (response.count >0)
-            {
-                //1- get the favorite topics
-                //NSDictionary * favs= [[NSUserDefaults standardUserDefaults] objectForKey:@"favTopics"];
-                //2- set up the topics array
-                for (NSDictionary* dic in [response objectForKey:@"Providers"])
-                {
-                    ProviderModel* tmpModel=[[ProviderModel alloc]init];
-                    
-                    tmpModel.ID=[dic objectForKey:@"provider_id"]!=[NSNull null]?[dic objectForKey:@"provider_id"]:@"";
-                    tmpModel.Title=[dic objectForKey:@"name"]!=[NSNull null]?[dic objectForKey:@"name"]:@"";
-                    tmpModel.URL =[dic objectForKey:@"url"]!=[NSNull null]?[dic objectForKey:@"url"]:@"";
-                    tmpModel.Image =[dic objectForKey:@"img"]!=[NSNull null]?[dic objectForKey:@"img"]:@"";
-                    
-                    [self AddToProviders:tmpModel];
-                }
-                [self.tableView reloadData];
-                
-                
-            }
-            //else
-            //   [SVProgressHUD dismiss];
-        }  andFailureBlock:^(NSError *error) {
-            // [SVProgressHUD dismiss];
-        }] ;
-    }
-}
-
-- (void) AddToProviders:(ProviderModel*) newProvider
-{
-    ProviderModel* provider = [[ProviderModel alloc]init];
-    provider.ID = newProvider.ID;
-    provider.Image = newProvider.Image;
-    provider.URL = newProvider.URL;
-    provider.Title = newProvider.Title;
-    
-    [newsProviders addObject:provider];
-}
-
+//
+//- (void) AddToProviders:(ProviderModel*) newProvider
+//{
+//    ProviderModel* provider = [[ProviderModel alloc]init];
+//    provider.ID = newProvider.ID;
+//    provider.Image = newProvider.Image;
+//    provider.URL = newProvider.URL;
+//    provider.Title = newProvider.Title;
+//    
+//    [newsProviders addObject:provider];
+//}
+//
 
 - (void)didReceiveMemoryWarning
 {
@@ -109,7 +80,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [newsProviders count];
+    return [[[ProvidersManager getProvidersManager] providers] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -117,6 +88,15 @@
     static NSString *CellIdentifier = @"ProviderCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
+    ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:indexPath.row];
+    
+    [cell.textLabel setText:provider.Title];
+    
+    if(provider.IsSelected)
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    else
+        cell.accessoryType = UITableViewCellAccessoryNone;
+
     // Configure the cell...
     
     return cell;
@@ -172,5 +152,29 @@
 }
 
  */
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ProviderModel* provider = (ProviderModel*)[[[ProvidersManager getProvidersManager] providers] objectAtIndex:indexPath.row];
+
+
+    // Navigation logic may go here. Create and push another view controller.
+    UITableViewCell* selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    if(selectedCell.accessoryType == UITableViewCellAccessoryCheckmark)
+    {
+        selectedCell.accessoryType = UITableViewCellAccessoryNone;
+        [[ProvidersManager getProvidersManager] setIsSelected:provider.ID withValue:NO];
+        //selectedRows[indexPath.row] =NO;
+    }
+    else if(  selectedCell.accessoryType == UITableViewCellAccessoryNone)
+    {
+        selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        [[ProvidersManager getProvidersManager] setIsSelected:provider.ID withValue:YES];
+        //selectedRows[indexPath.row] =YES;
+    }
+    // repeatDays = [NSMutableArray a]
+    
+}
 
 @end

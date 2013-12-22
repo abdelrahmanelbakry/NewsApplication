@@ -21,6 +21,8 @@
 @synthesize NumberOfViews;
 @synthesize ProviderID;
 @synthesize isDisplayed;
+@synthesize RelatedTopics;
+
 
 #define kAdId            @"ID"
 #define kProviderId      @"ProviderID"
@@ -34,7 +36,7 @@
 #define kAdNRead         @"NumberOfReads"
 #define kAdLink          @"topiclink"
 #define kisDisplayed     @"isDisplayed"
-
+#define kRelatedTopics   @"RelatedTopics"
 
 //
 - (void) encodeWithCoder:(NSCoder *)encoder
@@ -48,6 +50,8 @@
     [encoder encodeObject:SectionName forKey:kAdSecName];
     [encoder encodeObject:AllImgs forKey:kAdAllImgs];
     
+    
+    [encoder encodeObject:RelatedTopics forKey:kRelatedTopics];
     [encoder encodeObject:topicLink forKey:kAdLink];
     
     [encoder encodeObject:NumberOfViews forKey:kAdNViews];
@@ -73,6 +77,8 @@
         NumberOfViews=@"";
         ProviderID=@"";
         isDisplayed = NO;
+        
+        RelatedTopics = [[NSMutableArray alloc]init];
     }
     return self;
 }
@@ -93,6 +99,8 @@
         topicLink = [decoder decodeObjectForKey:kAdLink];
         NumberOfReadings = [decoder decodeObjectForKey:kAdNRead];
         NumberOfViews = [decoder decodeObjectForKey:kAdNViews];
+        
+        RelatedTopics = [decoder decodeObjectForKey:kRelatedTopics];
         
         ProviderID = [decoder decodeObjectForKey:kProviderId];
         isDisplayed = [decoder decodeBoolForKey:kisDisplayed];

@@ -17,7 +17,7 @@
 typedef void (^ActionFn)();
 
 // Paste your application id instead of this
-static NSString * const appId = @"1393988160813070";
+static NSString * const appId = @"715740885105282";
 
 @interface FBAPIWrapper () <FBSessionDelegate, FBDialogDelegate>{
     Facebook *facebook;

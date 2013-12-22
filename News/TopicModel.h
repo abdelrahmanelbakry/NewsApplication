@@ -21,5 +21,7 @@
 @property(nonatomic,retain)   NSString *topicLink;
 @property(nonatomic,retain)   NSString* NumberOfViews;
 @property(nonatomic,retain)   NSString* NumberOfReadings;
+@property(nonatomic,retain)   NSMutableArray* RelatedTopics;
+
 @property(nonatomic) BOOL isDisplayed;
 @end

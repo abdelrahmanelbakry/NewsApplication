@@ -28,6 +28,7 @@
 		50E4F47B186641F700B4E390 /* ProvidersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E4F47A186641F700B4E390 /* ProvidersViewController.m */; };
 		50E4F47E18664EAE00B4E390 /* ProviderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E4F47D18664EAE00B4E390 /* ProviderModel.m */; };
 		50E4F4811866522700B4E390 /* ProvidersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E4F4801866522700B4E390 /* ProvidersManager.m */; };
+		50F4E45A186706F700116AF1 /* RegsistraionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F4E459186706F700116AF1 /* RegsistraionViewController.m */; };
 		50FC1EA718377DA900B4567B /* HeadLineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC1EA618377DA900B4567B /* HeadLineViewController.m */; };
 		50FC1EAA18377DC400B4567B /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC1EA918377DC400B4567B /* DetailViewController.m */; };
 		50FC1EAD18377E9100B4567B /* HeadlineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC1EAC18377E9100B4567B /* HeadlineCell.m */; };
@@ -115,6 +116,8 @@
 		50E4F47D18664EAE00B4E390 /* ProviderModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProviderModel.m; sourceTree = "<group>"; };
 		50E4F47F1866522700B4E390 /* ProvidersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProvidersManager.h; sourceTree = "<group>"; };
 		50E4F4801866522700B4E390 /* ProvidersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProvidersManager.m; sourceTree = "<group>"; };
+		50F4E458186706F600116AF1 /* RegsistraionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegsistraionViewController.h; sourceTree = "<group>"; };
+		50F4E459186706F700116AF1 /* RegsistraionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegsistraionViewController.m; sourceTree = "<group>"; };
 		50FC1EA518377DA800B4567B /* HeadLineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadLineViewController.h; sourceTree = "<group>"; };
 		50FC1EA618377DA900B4567B /* HeadLineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadLineViewController.m; sourceTree = "<group>"; };
 		50FC1EA818377DC400B4567B /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
@@ -288,6 +291,8 @@
 				50E4F47D18664EAE00B4E390 /* ProviderModel.m */,
 				50E4F47F1866522700B4E390 /* ProvidersManager.h */,
 				50E4F4801866522700B4E390 /* ProvidersManager.m */,
+				50F4E458186706F600116AF1 /* RegsistraionViewController.h */,
+				50F4E459186706F700116AF1 /* RegsistraionViewController.m */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -607,6 +612,7 @@
 				50FC1EF918378BBB00B4567B /* AFHTTPRequestOperation.m in Sources */,
 				50FC1F1218379D7900B4567B /* UIScrollView+SVPullToRefresh.m in Sources */,
 				50FC1EFD18378BBB00B4567B /* UIImageView+AFNetworking.m in Sources */,
+				50F4E45A186706F700116AF1 /* RegsistraionViewController.m in Sources */,
 				50FC1EF818378BBB00B4567B /* AFHTTPClient.m in Sources */,
 				50FC1EFE18378BBB00B4567B /* UIImageView+Loading.m in Sources */,
 			);

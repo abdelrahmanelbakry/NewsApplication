@@ -27,7 +27,7 @@
 //
 - (void) encodeWithCoder:(NSCoder *)encoder
 {
-    [encoder encodeObject:ID forKey:kProviderId];
+    [encoder encodeInt:ID forKey:kProviderId];
     [encoder encodeObject:Image forKey:kProviderImage];
     [encoder encodeObject:Title forKey:kProviderTitle];
     [encoder encodeObject:URL forKey:kProviderURL];
@@ -41,7 +41,7 @@
     if (self = [super init])
     {
         
-        ID = @"";
+        ID = -1;
         Title=@"";
         Image=@"";
         URL=@"";
@@ -56,7 +56,7 @@
     {
         // If parent class also adopts NSCoding, replace [super init]
         // with [super initWithCoder:decoder] to properly initialize.
-        ID = [decoder decodeObjectForKey:kProviderId];
+        ID = [decoder decodeIntForKey:kProviderId];
         Title = [decoder decodeObjectForKey:kProviderTitle];
         URL = [decoder decodeObjectForKey:kProviderURL];
         Image = [decoder decodeObjectForKey:kProviderImage];

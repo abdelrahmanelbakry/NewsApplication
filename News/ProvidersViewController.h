@@ -10,6 +10,7 @@
 #import "NetworkOperations.h"
 #import "Reachability.h"
 #import "ProviderModel.h"
+#import "ProvidersManager.h"
 
 @interface ProvidersViewController : UITableViewController
 {

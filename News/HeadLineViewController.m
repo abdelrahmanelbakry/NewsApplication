@@ -43,26 +43,27 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    tempHeadlines = [[NSMutableArray alloc]init];
-    
-    groupedHeadlines = [[NSMutableDictionary alloc]init];
     reach = [Reachability reachabilityForInternetConnection];
     [reach startNotifier];
-    
-    [self loadHeadlines];
 
-  //  [self.tableView addPullToRefreshWithActionHandler:^{
-  //      [self loadHeadlines];
- //   }];
     
     [self.tableView addInfiniteScrollingWithActionHandler:^{
         [self loadMoreHeadlines];
     }];
+    
    // [self.tableView triggerPullToRefresh];
 
 
 }
 
+-(void) viewDidAppear:(BOOL)animated
+{
+    tempHeadlines = [[NSMutableArray alloc]init];
+    
+    groupedHeadlines = [[NSMutableDictionary alloc]init];
+
+    [self LoadProviders];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -70,6 +71,43 @@
 }
 
 #pragma mark - Load Data Functions
+
+
+-(void)LoadProviders
+{
+    
+    if (reach.isReachable)
+    {
+        [NetworkOperations operationWithFullURL:@"http://young-journey-4873.herokuapp.com/provider" parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+            if (response.count >0)
+            {
+                //1- get the favorite topics
+                //NSDictionary * favs= [[NSUserDefaults standardUserDefaults] objectForKey:@"favTopics"];
+                //2- set up the topics array
+                for (NSDictionary* dic in [response objectForKey:@"Providers"])
+                {
+                    ProviderModel* tmpModel=[[ProviderModel alloc]init];
+                    
+                    tmpModel.ID=[[dic objectForKey:@"provider_id"]intValue] ;//!=[NSNull null]?[dic objectForKey:@"provider_id"]:-1;
+                    tmpModel.Title=[dic objectForKey:@"name"]!=[NSNull null]?[dic objectForKey:@"name"]:@"";
+                    tmpModel.URL =[dic objectForKey:@"url"]!=[NSNull null]?[dic objectForKey:@"url"]:@"";
+                    tmpModel.Image =[dic objectForKey:@"img"]!=[NSNull null]?[dic objectForKey:@"img"]:@"";
+                    tmpModel.IsSelected = YES;
+                    //[self AddToProviders:tmpModel];
+                    
+                    [[ProvidersManager getProvidersManager] addProvider:tmpModel];
+                }
+                
+                [self loadHeadlines];
+
+            }
+            //else
+            //   [SVProgressHUD dismiss];
+        }  andFailureBlock:^(NSError *error) {
+            // [SVProgressHUD dismiss];
+        }] ;
+    }
+}
 
 -(void) loadHeadlines
 {
@@ -84,10 +122,11 @@
 
 -(void)LoadData
 {
+    //[NetworkOperations operationWithFullURL:@"http://young-journey-4873.herokuapp.com/category" parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response)
     
     if (reach.isReachable)
     {
-        [NetworkOperations operationWithParamerters:nil  requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+        [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/category/%i",categroyID] parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
             if (response.count >0)
             {
                 //1- get the favorite topics
@@ -103,7 +142,10 @@
                     tmpModel.ProviderID=[dic objectForKey:@"providerId"]!=[NSNull null]?[dic objectForKey:@"providerId"]:@"";
                     tmpModel.Title=[dic objectForKey:@"title"]!=[NSNull null]?[dic objectForKey:@"title"]:@"";
                     tmpModel.SectionName = [dic objectForKey:@"categoryId"]!=[NSNull null]?[dic objectForKey:@"categoryId"]:@"";
-                    [self AddToTopics:tmpModel];
+                    
+                    ProviderModel* provider = [[ProvidersManager getProvidersManager] getProviderModel:[tmpModel.ProviderID intValue] ];
+                    if(provider.IsSelected)
+                        [self AddToTopics:tmpModel];
                 }
                 [self.tableView reloadData];
                 
@@ -155,6 +197,8 @@
     
     return [providersSet count];
 }
+
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
@@ -174,7 +218,11 @@
     HeadlineCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
     NSArray* providers = [providersSet allObjects];
     
+   // ProviderModel* provider = [[ProvidersManager getProvidersManager] getProviderModel:[providers objectAtIndex:indexPath.section]];
+    
+    
     NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]];
+    
     
     for(int i=0;i<[headlines count];i++)
     {
@@ -182,9 +230,10 @@
         if(!tmpModel.isDisplayed)
         {
             [cell setCellDataWith:tmpModel ];
-            
+            cell.tag = [tmpModel.ID intValue];
             [[groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]] removeObject:tmpModel];
             tmpModel.isDisplayed = YES;
+            
             [self AddToTopics:tmpModel];
             
             break;
@@ -194,10 +243,20 @@
     
     return cell;
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 80;
+}
 
 -(NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [NSString stringWithFormat:@"Provider # %i",section+1];
+    NSArray* providers = [providersSet allObjects];
+    
+    int providerID = [[providers objectAtIndex:section] intValue];
+    ProviderModel* provider = [[ProvidersManager getProvidersManager] getProviderModel:providerID];
+    
+    return provider.Title;
+    //[NSString stringWithFormat:@"Provider # %i",section+1];
 }
 /*
 // Override to support conditional editing of the table view.
@@ -243,17 +302,20 @@
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSArray* providers = [providersSet allObjects];
+//   / NSArray* providers = [providersSet allObjects];
     if ([segue.identifier isEqualToString:@"ViewTopicSegueIdentifier"])
     {
-        NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:[self.tableView indexPathForCell:sender].section]];
+       // NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:[self.tableView indexPathForCell:sender].section]];
 
-        TopicModel * topic= [headlines objectAtIndex:[self.tableView indexPathForCell:sender].row];//[groupedHeadlines objectAtIndex:[self.tableView indexPathForCell:sender].row] ;
-
+      //  TopicModel * topic= [headlines objectAtIndex:[self.tableView indexPathForCell:sender].row];//[groupedHeadlines objectAtIndex:[self.tableView indexPathForCell:sender].row] ;
+        
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
+        
+        UITableViewCell* senderCell = (UITableViewCell*) sender;
+        
         DetailViewController* detailVC = segue.destinationViewController;
-        detailVC.topicID = [topic.ID intValue];
+        detailVC.topicID = senderCell.tag ;
     }
 }
 
@@ -262,7 +324,8 @@
 {
     UIButton* btnSender = (UIButton*) sender;
     selectedTopic= btnSender.tag;
-    //share
+    
+       //share
     [self showActionSheet];
     
 }
@@ -298,6 +361,17 @@
 }
 -(void) shareAtFB
 {
+    for(int i=0;i<[tempHeadlines count];i++)
+    {
+        TopicModel* tmpModel = (TopicModel*) [tempHeadlines objectAtIndex:i];
+        
+        if([tmpModel.ID isEqualToString:[NSString stringWithFormat:@"%i",selectedTopic]])
+        {
+            sharedTopic = tmpModel;
+            break;
+        }
+    }
+
     ///////////////////Facebook Share Code
     if ([[[UIDevice currentDevice] systemVersion] intValue]>=6) {
         
@@ -305,7 +379,7 @@
         {
             mySLComposerSheet = [[SLComposeViewController alloc] init]; //initiate the Social Controller
             mySLComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook]; //Tell him with what social plattform to use it, e.g. facebook or twitter
-            [mySLComposerSheet setInitialText:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%@",selectedTopic]];
+            [mySLComposerSheet setInitialText: sharedTopic.Title];
             [mySLComposerSheet setCompletionHandler:^(SLComposeViewControllerResult result) {
                 NSString *output=@"";
                 switch (result) {
@@ -329,21 +403,33 @@
             [self presentViewController:mySLComposerSheet animated:YES completion:nil];
         }else{
             
-            [AppSharer postOnFacebookURL:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%d",selectedTopic] withName:@"" caption:@"" description:@"" andImageURL:nil completionHandler:nil];
+            [AppSharer postOnFacebookURL:sharedTopic.Title withName:@"" caption:@"" description:@"" andImageURL:nil completionHandler:nil];
         }
     }else{
-        [AppSharer postOnFacebookURL:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%d",selectedTopic] withName:@"" caption:@"" description:@"" andImageURL:nil completionHandler:^(BOOL success, NSError *error) {}];
+        [AppSharer postOnFacebookURL:sharedTopic.Title withName:@"" caption:@"" description:@"" andImageURL:nil completionHandler:^(BOOL success, NSError *error) {}];
     }
 }
 -(void) shareAtTwitter
 {
+    
+    for(int i=0;i<[tempHeadlines count];i++)
+    {
+        TopicModel* tmpModel = (TopicModel*) [tempHeadlines objectAtIndex:i];
+        
+        if([tmpModel.ID isEqualToString:[NSString stringWithFormat:@"%i",selectedTopic]])
+        {
+            sharedTopic = tmpModel;
+            break;
+        }
+    }
+    
     NSError *jsonError = nil;
     
     //NSString *jsonRequest=[NSString stringWithFormat:@"{\"receipt-data\":\"%@\"}",receiptBase64];
     
     //NSLog(@"Sending this JSON: %@",jsonRequest);
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"http://www.mstaml.com/section/item.php?i=%d",selectedTopic],@"longUrl",nil] options:NSJSONWritingPrettyPrinted error:&jsonError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[NSDictionary dictionaryWithObjectsAndKeys:sharedTopic.Title,@"longUrl",nil] options:NSJSONWritingPrettyPrinted error:&jsonError];
     
     NSLog(@"JSON: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] );
     
@@ -433,6 +519,16 @@
 
 
 -(void)contTweet:(NSString*)shortURL{
+    for(int i=0;i<[tempHeadlines count];i++)
+    {
+        TopicModel* tmpModel = (TopicModel*) [tempHeadlines objectAtIndex:i];
+        
+        if([tmpModel.ID isEqualToString:[NSString stringWithFormat:@"%i",selectedTopic]])
+        {
+            sharedTopic = tmpModel;
+            break;
+        }
+    }
     
     NSLog(@"short url : %@",shortURL);
     
@@ -446,7 +542,7 @@
             
             SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
             
-          //  NSString* tweetStr=[NSString stringWithFormat:@"%@ \n %@ \n   %@  ", selectedAd.Title.length>0? selectedAd.Title:selectedAd.Content,shortURL,@"#mostaml"];//selectedForumName
+            NSString* tweetStr=[NSString stringWithFormat:@"%@ \n %@ \n   %@  ", sharedTopic.Title.length>0? sharedTopic.Title:sharedTopic.Content,shortURL,@"#mostaml"];//selectedForumName
             
          //   NSLog(@"ios 6 twitter string : %@ ",tweetStr);
             
