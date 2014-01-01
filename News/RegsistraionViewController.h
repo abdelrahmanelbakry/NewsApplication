@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NetworkOperations.h"
+#import "Reachability.h"
+@interface RegsistraionViewController : UIViewController<NSURLConnectionDelegate,NSURLConnectionDataDelegate>
+{
+    Reachability *reach;
+    NSMutableData* recievedData;
+    
+}
 
-@interface RegsistraionViewController : UIViewController
-
+-(IBAction) regsister:(id) sender;
 @end
