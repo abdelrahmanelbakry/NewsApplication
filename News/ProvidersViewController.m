@@ -68,35 +68,71 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (IBAction)editButton:(id)sender
+{
+    if(self.editing)
+    {
+        [super setEditing:NO animated:NO];
+        [self.tableView setEditing:NO animated:NO];
+        [self.tableView reloadData];
+        [self.navigationItem.rightBarButtonItem setTitle:@"ReOrder"];
+        [self.navigationItem.rightBarButtonItem setStyle:UIBarButtonItemStylePlain];
+    }
+    else
+    {
+        [super setEditing:YES animated:YES];
+        [self.tableView setEditing:YES animated:YES];
+        [self.tableView reloadData];
+        [self.navigationItem.rightBarButtonItem setTitle:@"Done"];
+        [self.navigationItem.rightBarButtonItem setStyle:UIBarButtonItemStyleDone];
+    }
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [[[ProvidersManager getProvidersManager] providers] count];
+    if(section==0)
+        return [[[ProvidersManager getProvidersManager] providers] count];
+    return 2;
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if(section==0)
+        return @"Providers";
+    
+    return @"Update Rate";
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"ProviderCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:indexPath.row];
-    
-    [cell.textLabel setText:provider.Title];
-    
-    if(provider.IsSelected)
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    if(indexPath.section==0)
+    {
+        ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:indexPath.row];
+        
+        [cell.textLabel setText:provider.Title];
+        
+        if(provider.IsSelected)
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        else
+            cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     else
-        cell.accessoryType = UITableViewCellAccessoryNone;
-
+    {
+        if(indexPath.row == 0)
+           [cell.textLabel setText:@"Every 15 Mins."];
+        if(indexPath.row == 1)
+            [cell.textLabel setText:@"Every 30 Mins."];
+    }
     // Configure the cell...
     
     return cell;
@@ -107,10 +143,9 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return NO;
 }
 */
-
 /*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -125,21 +160,36 @@
 }
 */
 
-/*
+
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
+    ProviderModel* tmpModel = [[ProviderModel alloc] init];
+    
+    ProviderModel* model = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:fromIndexPath.row];
+    
+    tmpModel.ID = model.ID;
+    tmpModel.Title = [model.Title copy];
+    tmpModel.Image = [model.Image copy];
+    tmpModel.URL = [model.URL copy];
+    tmpModel.IsSelected = model.IsSelected;
+    
+    [[ProvidersManager getProvidersManager] removeProviderByID:model.ID];
+    [[ProvidersManager getProvidersManager] insertProvider:tmpModel atIndex:toIndexPath.row];
 }
-*/
 
-/*
+
+
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    if(indexPath.section==0)
+        return YES;
+    else
+        return NO;
 }
-*/
+
 
 /*
 #pragma mark - Navigation
@@ -156,25 +206,27 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ProviderModel* provider = (ProviderModel*)[[[ProvidersManager getProvidersManager] providers] objectAtIndex:indexPath.row];
+    if(indexPath.section==0)
+    {
+        ProviderModel* provider = (ProviderModel*)[[[ProvidersManager getProvidersManager] providers] objectAtIndex:indexPath.row];
 
 
-    // Navigation logic may go here. Create and push another view controller.
-    UITableViewCell* selectedCell = [tableView cellForRowAtIndexPath:indexPath];
-    if(selectedCell.accessoryType == UITableViewCellAccessoryCheckmark)
-    {
-        selectedCell.accessoryType = UITableViewCellAccessoryNone;
-        [[ProvidersManager getProvidersManager] setIsSelected:provider.ID withValue:NO];
-        //selectedRows[indexPath.row] =NO;
+        // Navigation logic may go here. Create and push another view controller.
+        UITableViewCell* selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+        if(selectedCell.accessoryType == UITableViewCellAccessoryCheckmark)
+        {
+            selectedCell.accessoryType = UITableViewCellAccessoryNone;
+            [[ProvidersManager getProvidersManager] setIsSelected:provider.ID withValue:NO];
+            //selectedRows[indexPath.row] =NO;
+        }
+        else if(  selectedCell.accessoryType == UITableViewCellAccessoryNone)
+        {
+            selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+            [[ProvidersManager getProvidersManager] setIsSelected:provider.ID withValue:YES];
+            //selectedRows[indexPath.row] =YES;
+        }
+        // repeatDays = [NSMutableArray a]
     }
-    else if(  selectedCell.accessoryType == UITableViewCellAccessoryNone)
-    {
-        selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [[ProvidersManager getProvidersManager] setIsSelected:provider.ID withValue:YES];
-        //selectedRows[indexPath.row] =YES;
-    }
-    // repeatDays = [NSMutableArray a]
-    
 }
 
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50682A25187834EF005F23C9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50682A24187834EF005F23C9 /* LoginViewController.m */; };
 		50A01E0A1845412200508527 /* CategoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A01E091845412200508527 /* CategoriesViewController.m */; };
 		50DD3EEF182529CF00E40EEE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DD3EEE182529CF00E40EEE /* UIKit.framework */; };
 		50DD3EF1182529CF00E40EEE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DD3EF0182529CF00E40EEE /* Foundation.framework */; };
@@ -85,6 +86,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		50682A23187834EF005F23C9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		50682A24187834EF005F23C9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		50A01E081845412200508527 /* CategoriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoriesViewController.h; sourceTree = "<group>"; };
 		50A01E091845412200508527 /* CategoriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoriesViewController.m; sourceTree = "<group>"; };
 		50DD3EEB182529CF00E40EEE /* News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = News.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,6 +296,8 @@
 				50E4F4801866522700B4E390 /* ProvidersManager.m */,
 				50F4E458186706F600116AF1 /* RegsistraionViewController.h */,
 				50F4E459186706F700116AF1 /* RegsistraionViewController.m */,
+				50682A23187834EF005F23C9 /* LoginViewController.h */,
+				50682A24187834EF005F23C9 /* LoginViewController.m */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -606,6 +611,7 @@
 				50E4F47B186641F700B4E390 /* ProvidersViewController.m in Sources */,
 				50FC1EF218378BBB00B4567B /* FBLoginDialog.m in Sources */,
 				50DD3EFF182529CF00E40EEE /* AppDelegate.m in Sources */,
+				50682A25187834EF005F23C9 /* LoginViewController.m in Sources */,
 				50FC1EF018378BBB00B4567B /* FBDialog.m in Sources */,
 				50DD3F0E182529CF00E40EEE /* ViewController.m in Sources */,
 				50FC1EF618378BBB00B4567B /* JSONKit.m in Sources */,

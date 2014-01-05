@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CommonCrypto/CommonDigest.h>
 #import "NetworkOperations.h"
 #import "Reachability.h"
 @interface RegsistraionViewController : UIViewController<NSURLConnectionDelegate,NSURLConnectionDataDelegate>
@@ -17,4 +18,5 @@
 }
 
 -(IBAction) regsister:(id) sender;
+-(NSString *) md5:(NSString *) input;
 @end

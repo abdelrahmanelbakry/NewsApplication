@@ -43,6 +43,21 @@ ProvidersManager* manager =  nil;
     return nil;
 }
 
+-(void) insertProvider:(ProviderModel*) newData atIndex:(NSInteger) index
+{
+    if(![[ProvidersManager getProvidersManager] providerExists:newData.ID])
+    {
+        ProviderModel* data = [[ProviderModel alloc]init];
+        data.ID = newData.ID;
+        data.Image = newData.Image;
+        data.Title = newData.Title;
+        data.URL = newData.URL;
+        data.IsSelected = newData.IsSelected;
+        [providers insertObject:data atIndex:index];
+        
+    }
+
+}
 -(void) addProvider:(ProviderModel*) newData
 {
     if(![[ProvidersManager getProvidersManager] providerExists:newData.ID])

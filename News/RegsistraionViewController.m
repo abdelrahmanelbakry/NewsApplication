@@ -49,13 +49,27 @@
     
     return Query;
 }
+- (NSString *) md5:(NSString *) input
+{
+    const char *cStr = [input UTF8String];
+    unsigned char digest[16];
+    CC_MD5( cStr, strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output;
+    
+}
 
 -(IBAction) regsister:(id) sender
 {
     if (reach.isReachable)
     {
         NSURL* url = [NSURL URLWithString:@"http://young-journey-4873.herokuapp.com/register"];
-        NSString* strURL = [NSString stringWithFormat:@"{\"utf8\":\"✓\",\"user\":{\"first_name\":\"man\", \"last_name\":\"human\", \"password\":\"123456\", \"mobile_no\":\"121\", \"email\":\"human3@earth.com\"}, \"commit\":\"Register\"}"];
+        NSString* strURL = [NSString stringWithFormat:@"{\"utf8\":\"✓\",\"user\":{\"first_name\":\"b2\", \"last_name\":\"human2\", \"password\":\"123456\", \"mobile_no\":\"1212\", \"email\":\"b@earth.com\"}, \"commit\":\"Register\"}"];
         
         NSData* requestData = [strURL dataUsingEncoding:NSUTF8StringEncoding];
         
