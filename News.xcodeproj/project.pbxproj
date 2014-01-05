@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5050D9081879823E00934E3C /* RefreshRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5050D9071879823E00934E3C /* RefreshRate.m */; };
 		50682A25187834EF005F23C9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50682A24187834EF005F23C9 /* LoginViewController.m */; };
 		50A01E0A1845412200508527 /* CategoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A01E091845412200508527 /* CategoriesViewController.m */; };
 		50DD3EEF182529CF00E40EEE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DD3EEE182529CF00E40EEE /* UIKit.framework */; };
@@ -86,6 +87,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5050D9061879823E00934E3C /* RefreshRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshRate.h; sourceTree = "<group>"; };
+		5050D9071879823E00934E3C /* RefreshRate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshRate.m; sourceTree = "<group>"; };
 		50682A23187834EF005F23C9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		50682A24187834EF005F23C9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		50A01E081845412200508527 /* CategoriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoriesViewController.h; sourceTree = "<group>"; };
@@ -298,6 +301,8 @@
 				50F4E459186706F700116AF1 /* RegsistraionViewController.m */,
 				50682A23187834EF005F23C9 /* LoginViewController.h */,
 				50682A24187834EF005F23C9 /* LoginViewController.m */,
+				5050D9061879823E00934E3C /* RefreshRate.h */,
+				5050D9071879823E00934E3C /* RefreshRate.m */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -598,6 +603,7 @@
 				50FC1EB0183784A300B4567B /* TopicModel.m in Sources */,
 				50FC1EA718377DA900B4567B /* HeadLineViewController.m in Sources */,
 				50E4F47E18664EAE00B4E390 /* ProviderModel.m in Sources */,
+				5050D9081879823E00934E3C /* RefreshRate.m in Sources */,
 				50FC1EFF18378BBB00B4567B /* NetworkOperations.m in Sources */,
 				50FC1EFA18378BBB00B4567B /* AFImageRequestOperation.m in Sources */,
 				50FC1F0018378BBB00B4567B /* Reachability.m in Sources */,

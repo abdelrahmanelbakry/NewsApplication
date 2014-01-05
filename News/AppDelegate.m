@@ -15,8 +15,10 @@
     // Override point for customization after application launch.
     
     NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *defaultValues = [NSDictionary dictionaryWithObject:
-                                   [NSNumber numberWithBool:YES] forKey:@"firstlaunch"];
+    NSDictionary *defaultValues = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   [NSNumber numberWithInt:1] ,@"rate",
+                                   [NSNumber numberWithBool:YES] ,@"firstlaunch",nil];
+  
     [userdefaults registerDefaults:defaultValues];
     [userdefaults synchronize];
 

@@ -27,5 +27,6 @@
 -(void) setIsSelected: (int) providerID withValue:(BOOL) selectionValue;
 -(ProviderModel*) getProviderModel:(int) providerID;
 -(void) insertProvider:(ProviderModel*) newData atIndex:(NSInteger) index;
+-(NSString*) getProrities;
 
 @end

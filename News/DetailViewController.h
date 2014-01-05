@@ -25,7 +25,7 @@
 
 
 @property(nonatomic,retain) IBOutlet UILabel* topicTitle;
-@property(nonatomic,retain) IBOutlet UILabel* topicContent;
+@property(nonatomic,retain) IBOutlet UITextView* topicContent;
 @property(nonatomic,retain) IBOutlet UIImageView* topicImg;
 
 

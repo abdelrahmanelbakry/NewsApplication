@@ -13,6 +13,7 @@
 @end
 
 @implementation RegsistraionViewController
+@synthesize txtFirstName,txtLastName,txtMail,txtMobile,txtPassword;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -68,38 +69,46 @@
 {
     if (reach.isReachable)
     {
-        NSURL* url = [NSURL URLWithString:@"http://young-journey-4873.herokuapp.com/register"];
-        NSString* strURL = [NSString stringWithFormat:@"{\"utf8\":\"✓\",\"user\":{\"first_name\":\"b2\", \"last_name\":\"human2\", \"password\":\"123456\", \"mobile_no\":\"1212\", \"email\":\"b@earth.com\"}, \"commit\":\"Register\"}"];
-        
-        NSData* requestData = [strURL dataUsingEncoding:NSUTF8StringEncoding];
-        
-        NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
-        //Set HTTP method
-        [request setHTTPMethod:@"POST"];
-        
-        //[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-       // [request setValue:[NSString stringWithFormat:@"%d",[requestData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPBody:requestData];
-        NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        
-//
-//        [NetworkOperations operationWithFullURL:strURL parameters:[self constructquery] requestMethod:HTTPRequestMethodPOST successBlock:^(id response){
-//            if ([response count]>0) {
-//                NSLog(@"Sections data response : %@",response);
-//           //     [self parseResponse:response];
-//                
-//                //  [self.tableView reloadData];
-//                // [self setupPageControlPropertiesWithNumberOfPages:[self.adDataModel.AllImgs count]];
-//                
-//             //   [self updateLayout];
-//               // [mytableView reloadData];
-//            }
-//            
-//            
-//        }  andFailureBlock:^(NSError *error) {
-        
-//        }] ;
+        if([[txtPassword text] length]>6)
+        {
+            NSURL* url = [NSURL URLWithString:@"http://young-journey-4873.herokuapp.com/register"];
+            NSString* strURL = [NSString stringWithFormat:@"{\"utf8\":\"✓\",\"user\":{\"first_name\":\"%@\", \"last_name\":\"%@\", \"password\":\"%@\", \"mobile_no\":\"%@\", \"email\":\"%@\"}, \"commit\":\"Register\"}",txtFirstName.text, txtLastName.text,txtPassword.text,txtMobile.text,txtMail.text];
+            
+            NSData* requestData = [strURL dataUsingEncoding:NSUTF8StringEncoding];
+            
+            NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
+            //Set HTTP method
+            [request setHTTPMethod:@"POST"];
+            
+            //[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+           // [request setValue:[NSString stringWithFormat:@"%d",[requestData length]] forHTTPHeaderField:@"Content-Length"];
+            [request setHTTPBody:requestData];
+            NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+            
+    //
+    //        [NetworkOperations operationWithFullURL:strURL parameters:[self constructquery] requestMethod:HTTPRequestMethodPOST successBlock:^(id response){
+    //            if ([response count]>0) {
+    //                NSLog(@"Sections data response : %@",response);
+    //           //     [self parseResponse:response];
+    //                
+    //                //  [self.tableView reloadData];
+    //                // [self setupPageControlPropertiesWithNumberOfPages:[self.adDataModel.AllImgs count]];
+    //                
+    //             //   [self updateLayout];
+    //               // [mytableView reloadData];
+    //            }
+    //            
+    //            
+    //        }  andFailureBlock:^(NSError *error) {
+            
+    //        }] ;
+        }
+        else
+        {
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Regsistration Failed,Pasword can't be less then 6 characters" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+        }
     }
 }
 
@@ -117,6 +126,32 @@
 {
     NSString* response = [[NSString alloc] initWithData:recievedData encoding:NSUTF8StringEncoding];
     NSLog(@"%@",response);
-    
+    if([response rangeOfString:@"Success"].location != NSNotFound)
+    {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Congratluations!" message:@"You can now Login" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show ];
+        //CategoriesViewController* categoriesViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"categoriesView"];
+        [self.navigationController popViewControllerAnimated:YES]; //pushViewController:categoriesViewController animated:YES];
+    }
+    else
+    {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Login Failed" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+}
+
+-(IBAction)hidekeyboard:(id)sender
+{
+    [self.view endEditing:YES];
+    [self.view resignFirstResponder];
+}
+
+-(void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:    (NSInteger)buttonIndex
+{
+    if(buttonIndex==0)
+    {
+        //Code that will run after you press ok button
+     //   [self.navigationController popViewControllerAnimated:YES]; //pushViewController:categoriesViewController animated:YES];
+    }
 }
 @end

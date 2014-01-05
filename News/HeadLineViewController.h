@@ -19,6 +19,7 @@
 #import <Twitter/Twitter.h>
 #import <MessageUI/MessageUI.h>
 #import <Accounts/Accounts.h>
+#import "RefreshRate.h"
 #import "AppSharer.h"
 #import "TwitterShare.h"
 #import "ProvidersManager.h"
@@ -32,11 +33,12 @@
     SLComposeViewController *mySLComposerSheet;
     int selectedTopic;
     TopicModel* sharedTopic;
-
 }
 @property(nonatomic) int categroyID;
 
 -(void) loadHeadlines;
 -(void) loadMoreHeadlines;
 -(IBAction)shareTopic:(id)sender;
+-(void) headlinesCheck:(id)sender;
+
 @end

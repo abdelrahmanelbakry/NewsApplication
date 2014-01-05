@@ -51,11 +51,44 @@
         [self loadMoreHeadlines];
     }];
     
+    [RefreshRate setLastRefreshDate:[NSDate date]];
+
+    //Set a timer to update the clock
+    [NSTimer scheduledTimerWithTimeInterval:1.0
+                                     target:self
+                                   selector:@selector(headlinesCheck:)
+                                   userInfo:nil
+                                    repeats:YES];
+
    // [self.tableView triggerPullToRefresh];
 
 
 }
 
+-(void) headlinesCheck:(id)sender
+{
+    NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+    
+    int intervalID = [userdefaults integerForKey:@"rate"];
+    
+    NSDate* checkDate;
+    switch (intervalID)
+    {
+        case 0:
+            checkDate = [[RefreshRate getLastRefreshDate] dateByAddingTimeInterval:900];
+            break;
+        case 1:
+            checkDate = [[RefreshRate getLastRefreshDate] dateByAddingTimeInterval:1800];
+            break;
+        default:
+            break;
+    }
+    NSDate* currDate = [NSDate date];
+
+    if([[currDate laterDate:checkDate]isEqualToDate:currDate])
+        [self loadHeadlines];
+
+}
 -(void) viewDidAppear:(BOOL)animated
 {
     tempHeadlines = [[NSMutableArray alloc]init];
@@ -111,6 +144,8 @@
 
 -(void) loadHeadlines
 {
+    [tempHeadlines removeAllObjects];
+    [groupedHeadlines removeAllObjects];
     [self LoadData];
 
 }
@@ -119,14 +154,25 @@
 {
     
 }
+-(NSDictionary*) constructQuery
+{
+    NSMutableDictionary* Query = [[NSMutableDictionary alloc]init];
+    
+     [Query setObject:[[ProvidersManager getProvidersManager] getProrities] forKey:@"priority"];
+     
+     //[Query setObject:[NSNumber numberWithInt:currentAd] forKey:@"i"];
+    
+    
+    return Query;
 
+}
 -(void)LoadData
 {
     //[NetworkOperations operationWithFullURL:@"http://young-journey-4873.herokuapp.com/category" parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response)
     
     if (reach.isReachable)
     {
-        [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/category/%i",categroyID] parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+        [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/orderedCategory/%i?priority=%@",categroyID,[[ProvidersManager getProvidersManager] getProrities]] parameters: nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
             if (response.count >0)
             {
                 //1- get the favorite topics
@@ -149,7 +195,7 @@
                 }
                 [self.tableView reloadData];
                 
-                
+                [RefreshRate setLastRefreshDate:[NSDate date]];
             }
             //else
             //   [SVProgressHUD dismiss];
@@ -224,8 +270,10 @@
     NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]];
     
     
+    
     for(int i=0;i<[headlines count];i++)
     {
+        //long randomNumber = random();
         TopicModel* tmpModel = (TopicModel*) [headlines objectAtIndex:i];
         if(!tmpModel.isDisplayed)
         {
@@ -234,13 +282,18 @@
             [[groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]] removeObject:tmpModel];
             tmpModel.isDisplayed = YES;
             
+            
             [self AddToTopics:tmpModel];
             
+           // cell.te
             break;
         }
     }
     // Configure the cell...
     
+    if(indexPath.row>2)
+        [cell.topicTitle setTextColor:  [UIColor lightGrayColor]];
+
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

@@ -107,6 +107,12 @@
         [self.topicDataModel.RelatedTopics addObject:tmpModel];
     }
     
+    if([self.topicDataModel.RelatedTopics count]==0)
+       [self.mytableView removeFromSuperview];
+    {
+        [self.topicContent setFrame:CGRectMake(self.topicContent.frame.origin.x, self.topicContent.frame.origin.y, self.topicContent.frame.size.width, self.topicContent.frame.size.height+40)];
+    }
+    
      [self.topicDataModel.AllImgs addObject:[response objectForKey:@"img"]!=[NSNull null]?[response objectForKey:@"img"]:@""];
 //    topicDataModel.Date=[[response objectForKey:@"detail"] objectForKey:@"post"]!=[NSNull null]?[[response objectForKey:@"detail"] objectForKey:@"post"]:@"";
     topicDataModel.ID=[response  objectForKey:@"id"]!=[NSNull null]?[response  objectForKey:@"id"]:@"";

@@ -114,7 +114,7 @@
 {
     static NSString *CellIdentifier = @"ProviderCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
+
     if(indexPath.section==0)
     {
         ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:indexPath.row];
@@ -128,10 +128,19 @@
     }
     else
     {
+        NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+        
         if(indexPath.row == 0)
            [cell.textLabel setText:@"Every 15 Mins."];
         if(indexPath.row == 1)
             [cell.textLabel setText:@"Every 30 Mins."];
+        
+        if([userdefaults integerForKey:@"rate"] == indexPath.row)
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        else
+            cell.accessoryType = UITableViewCellAccessoryNone;
+
+        
     }
     // Configure the cell...
     
@@ -226,6 +235,23 @@
             //selectedRows[indexPath.row] =YES;
         }
         // repeatDays = [NSMutableArray a]
+    }
+    else
+    {
+        UITableViewCell* selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+
+        NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+        [userdefaults setInteger:indexPath.row forKey:@"rate"];
+        
+//        if(indexPath.row == 0)
+//            [cell.textLabel setText:@"Every 15 Mins."];
+//        if(indexPath.row == 1)
+//            [cell.textLabel setText:@"Every 30 Mins."];
+        
+        //if([userdefaults integerForKey:@"rate"] == indexPath.row)
+        selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        [tableView reloadData];        //else
+          //  selectedCell.accessoryType = UITableViewCellAccessoryNone;
     }
 }
 

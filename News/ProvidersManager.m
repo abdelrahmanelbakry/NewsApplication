@@ -43,6 +43,21 @@ ProvidersManager* manager =  nil;
     return nil;
 }
 
+-(NSString*) getProrities
+{
+    NSMutableString* prorities = [[NSMutableString alloc] init];
+    for(int i=0;i< [[[ProvidersManager getProvidersManager] providers] count];i++)
+    {
+        ProviderModel* provider = (ProviderModel*) [[[ProvidersManager getProvidersManager] providers] objectAtIndex:i];
+        
+        [prorities appendString:[NSString stringWithFormat:@"%i",provider.ID]];
+        if(i+1 < [[[ProvidersManager getProvidersManager] providers] count])
+            [prorities appendString:@","];
+
+    }
+    return prorities;
+}
+
 -(void) insertProvider:(ProviderModel*) newData atIndex:(NSInteger) index
 {
     if(![[ProvidersManager getProvidersManager] providerExists:newData.ID])
