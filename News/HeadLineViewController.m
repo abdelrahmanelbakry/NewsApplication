@@ -8,9 +8,6 @@
 
 #import "HeadLineViewController.h"
 
-#define HEADLINE1 @"خضيرة يصاب بقطع في الرباط الصليبي ويغيب ستة أشهر"
-#define HEADLINE2 @"فالكاو سعيد في موناكو"
-
 #define HEADLINE_URL @"http://young-journey-4873.herokuapp.com/"
 
 @interface HeadLineViewController ()
@@ -59,12 +56,32 @@
                                    selector:@selector(headlinesCheck:)
                                    userInfo:nil
                                     repeats:YES];
-
-   // [self.tableView triggerPullToRefresh];
+    
+    UIBarButtonItem *addbutton         = [[UIBarButtonItem alloc]
+                                             initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                             target:self
+                                             action:@selector(addFriendDialog:)];
+    
+    UIBarButtonItem *settingsbutton          = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStyleBordered target:self action:@selector(settingsDialog:)];
+                                           // initWithBarButtonSystemItem:UIbar
+                                           // target:self action:@selector(settingsDialog:)];
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:addbutton, settingsbutton, nil];
+    
+   
 
 
 }
-
+-(IBAction)addFriendDialog:(id)sender
+{
+    FriendFollowViewController* friendController = [self.storyboard instantiateViewControllerWithIdentifier:@"FriendsController"];
+    [self.navigationController pushViewController:friendController animated:YES];
+}
+-(IBAction)settingsDialog:(id)sender
+{
+    ProvidersViewController* settingsController = [self.storyboard instantiateViewControllerWithIdentifier:@"settingsController"];
+    [self.navigationController pushViewController:settingsController animated:YES];
+}
 -(void) headlinesCheck:(id)sender
 {
     NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
@@ -369,6 +386,21 @@
         
         DetailViewController* detailVC = segue.destinationViewController;
         detailVC.topicID = senderCell.tag ;
+        NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+        
+        //Mark this story as read
+        [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/readTest/%@?story_id=%i",[userdefaults objectForKey:@"user_id"],senderCell.tag] parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+            if (response.count >0)
+            {
+                           
+                
+            }
+            //else
+            //   [SVProgressHUD dismiss];
+        }  andFailureBlock:^(NSError *error) {
+            // [SVProgressHUD dismiss];
+        }] ;
+
     }
 }
 

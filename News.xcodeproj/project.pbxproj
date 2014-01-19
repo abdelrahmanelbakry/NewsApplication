@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		5050D9081879823E00934E3C /* RefreshRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5050D9071879823E00934E3C /* RefreshRate.m */; };
 		50682A25187834EF005F23C9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50682A24187834EF005F23C9 /* LoginViewController.m */; };
+		507F64B1188AB5DD0072F9A1 /* FriendFollowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507F64B0188AB5DD0072F9A1 /* FriendFollowViewController.m */; };
+		507F64B4188AB5F50072F9A1 /* FriendFollowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 507F64B3188AB5F50072F9A1 /* FriendFollowCell.m */; };
+		507F64B7188AC4440072F9A1 /* UserDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 507F64B6188AC4440072F9A1 /* UserDataModel.m */; };
 		50A01E0A1845412200508527 /* CategoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A01E091845412200508527 /* CategoriesViewController.m */; };
 		50DD3EEF182529CF00E40EEE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DD3EEE182529CF00E40EEE /* UIKit.framework */; };
 		50DD3EF1182529CF00E40EEE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DD3EF0182529CF00E40EEE /* Foundation.framework */; };
@@ -91,6 +94,12 @@
 		5050D9071879823E00934E3C /* RefreshRate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshRate.m; sourceTree = "<group>"; };
 		50682A23187834EF005F23C9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		50682A24187834EF005F23C9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		507F64AF188AB5DD0072F9A1 /* FriendFollowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendFollowViewController.h; sourceTree = "<group>"; };
+		507F64B0188AB5DD0072F9A1 /* FriendFollowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendFollowViewController.m; sourceTree = "<group>"; };
+		507F64B2188AB5F50072F9A1 /* FriendFollowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendFollowCell.h; sourceTree = "<group>"; };
+		507F64B3188AB5F50072F9A1 /* FriendFollowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendFollowCell.m; sourceTree = "<group>"; };
+		507F64B5188AC4440072F9A1 /* UserDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDataModel.h; sourceTree = "<group>"; };
+		507F64B6188AC4440072F9A1 /* UserDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDataModel.m; sourceTree = "<group>"; };
 		50A01E081845412200508527 /* CategoriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoriesViewController.h; sourceTree = "<group>"; };
 		50A01E091845412200508527 /* CategoriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoriesViewController.m; sourceTree = "<group>"; };
 		50DD3EEB182529CF00E40EEE /* News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = News.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -303,6 +312,12 @@
 				50682A24187834EF005F23C9 /* LoginViewController.m */,
 				5050D9061879823E00934E3C /* RefreshRate.h */,
 				5050D9071879823E00934E3C /* RefreshRate.m */,
+				507F64AF188AB5DD0072F9A1 /* FriendFollowViewController.h */,
+				507F64B0188AB5DD0072F9A1 /* FriendFollowViewController.m */,
+				507F64B2188AB5F50072F9A1 /* FriendFollowCell.h */,
+				507F64B3188AB5F50072F9A1 /* FriendFollowCell.m */,
+				507F64B5188AC4440072F9A1 /* UserDataModel.h */,
+				507F64B6188AC4440072F9A1 /* UserDataModel.m */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -601,6 +616,7 @@
 				50E4F4811866522700B4E390 /* ProvidersManager.m in Sources */,
 				50FC1EFB18378BBB00B4567B /* AFNetworkActivityIndicatorManager.m in Sources */,
 				50FC1EB0183784A300B4567B /* TopicModel.m in Sources */,
+				507F64B4188AB5F50072F9A1 /* FriendFollowCell.m in Sources */,
 				50FC1EA718377DA900B4567B /* HeadLineViewController.m in Sources */,
 				50E4F47E18664EAE00B4E390 /* ProviderModel.m in Sources */,
 				5050D9081879823E00934E3C /* RefreshRate.m in Sources */,
@@ -609,6 +625,8 @@
 				50FC1F0018378BBB00B4567B /* Reachability.m in Sources */,
 				50FC1F1118379D7900B4567B /* UIScrollView+SVInfiniteScrolling.m in Sources */,
 				50FC1EEC18378BBB00B4567B /* AppSharer.m in Sources */,
+				507F64B7188AC4440072F9A1 /* UserDataModel.m in Sources */,
+				507F64B1188AB5DD0072F9A1 /* FriendFollowViewController.m in Sources */,
 				50DD3EFB182529CF00E40EEE /* main.m in Sources */,
 				50FC1EEE18378BBB00B4567B /* Facebook.m in Sources */,
 				50FC1EF318378BBB00B4567B /* FBRequest.m in Sources */,

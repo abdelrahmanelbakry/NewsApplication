@@ -115,8 +115,13 @@
 {
     NSString* response = [[NSString alloc] initWithData:recievedData encoding:NSUTF8StringEncoding];
     NSLog(@"%@",response);
-    if([response isEqualToString:@"{\"Login Status\":\"Success\"}\n\n" ])
+    if([response rangeOfString:@"Success"].location != NSNotFound)
     {
+        NSArray* components = [response componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@":}"]];
+        NSUserDefaults* userdefualts = [NSUserDefaults standardUserDefaults];
+        [userdefualts setObject:[components objectAtIndex:[components count]-2] forKey:@"user_id"];
+        
+        
         CategoriesViewController* categoriesViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"categoriesView"];
         [self.navigationController pushViewController:categoriesViewController animated:YES];
     }

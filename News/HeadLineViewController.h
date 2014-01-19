@@ -23,7 +23,8 @@
 #import "AppSharer.h"
 #import "TwitterShare.h"
 #import "ProvidersManager.h"
-
+#import "ProvidersViewController.h"
+#import "FriendFollowViewController.h"
 
 @interface HeadLineViewController : UITableViewController<UIActionSheetDelegate>
 {
@@ -40,5 +41,6 @@
 -(void) loadMoreHeadlines;
 -(IBAction)shareTopic:(id)sender;
 -(void) headlinesCheck:(id)sender;
-
+-(IBAction)addFriendDialog:(id)sender;
+-(IBAction)settingsDialog:(id)sender;
 @end

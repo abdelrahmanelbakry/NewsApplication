@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TopicModel : NSObject
+@interface TopicModel : NSObject<NSCoding>
 
 @property(nonatomic, retain)  NSString *ID;
 @property(nonatomic, retain)  NSString *ProviderID;
@@ -22,6 +22,5 @@
 @property(nonatomic,retain)   NSString* NumberOfViews;
 @property(nonatomic,retain)   NSString* NumberOfReadings;
 @property(nonatomic,retain)   NSMutableArray* RelatedTopics;
-
 @property(nonatomic) BOOL isDisplayed;
 @end
