@@ -89,7 +89,6 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-     //   NSDictionary *headerFields = [(NSHTTPURLResponse*)response allHeaderFields]; //This would give you all the header fields;
         NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse *)response;
         
         NSArray *allCookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[urlResponse allHeaderFields] forURL:[response URL]];
@@ -119,7 +118,10 @@
     {
         NSArray* components = [response componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@":}"]];
         NSUserDefaults* userdefualts = [NSUserDefaults standardUserDefaults];
-        [userdefualts setObject:[components objectAtIndex:[components count]-2] forKey:@"user_id"];
+        NSString* userId =[components objectAtIndex:[components count]-2];
+        userId = [userId stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        userId = [userId stringByReplacingOccurrencesOfString:@" " withString:@""];
+        [userdefualts setObject:userId forKey:@"user_id"];
         
         
         CategoriesViewController* categoriesViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"categoriesView"];

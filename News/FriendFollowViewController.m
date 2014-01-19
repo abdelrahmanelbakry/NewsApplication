@@ -8,6 +8,7 @@
 
 #import "FriendFollowViewController.h"
 
+FriendFollowViewController* sharedFriendController =nil;
 @interface FriendFollowViewController ()
 {
     NSMutableArray* friends;
@@ -23,6 +24,7 @@
     if (self) {
         // Custom initialization
     }
+    sharedFriendController = self;
     return self;
 }
 
@@ -79,6 +81,8 @@
                 person.MobileNo = [person.MobileNo stringByReplacingOccurrencesOfString:@")" withString:@""];
                 person.MobileNo = [person.MobileNo stringByReplacingOccurrencesOfString:@"(" withString:@""];
                 person.MobileNo = [person.MobileNo stringByReplacingOccurrencesOfString:@" " withString:@""];
+                person.MobileNo = [person.MobileNo stringByReplacingOccurrencesOfString:@"+" withString:@""];
+                person.MobileNo = [person.MobileNo stringByReplacingOccurrencesOfString:@"-" withString:@""];
 
             }
             else
@@ -96,9 +100,70 @@
         NSLog(@"Error reading Address Book");
     } 
 }
+
+-(IBAction)followUser:(id)sender
+{
+    
+    UIButton* btnSender = (UIButton*) sender;
+    NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+
+   // FriendFollowCell* cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:btnSender.tag  inSection:1]];
+    UserDataModel* person = (UserDataModel*) [friends objectAtIndex:btnSender.tag];
+    [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/follow/%@?iam=%@",person.ID,[userdefaults objectForKey:@"user_id"]] parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+        if (response.count >0)
+        {
+            
+        }
+        //else
+        //   [SVProgressHUD dismiss];
+    }  andFailureBlock:^(NSError *error) {
+        // [SVProgressHUD dismiss];
+    }] ;
+    
+    [friends removeObjectAtIndex:btnSender.tag];
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:btnSender.tag  inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
+
 #pragma mark - Loading data functions
 
--(void)LoadData
+-(void) LoadData
+{
+    if (reach.isReachable)
+    {
+        NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+        
+        [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/listUsersFollowedByMe/%@",[userdefaults objectForKey:@"user_id"]] parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+            if (response.count >0)
+            {
+                //1- get the favorite topics
+                //NSDictionary * favs= [[NSUserDefaults standardUserDefaults] objectForKey:@"favTopics"];
+                //2- set up the topics array
+                for (NSDictionary* dic in [response objectForKey:@"users"])
+                {
+                    UserDataModel* tmpModel=[[UserDataModel alloc]init];
+                    
+                    tmpModel.ID=[dic objectForKey:@"user_id"]!=[NSNull null]?[dic objectForKey:@"user_id"]:@"";
+                    tmpModel.FirstName=[dic objectForKey:@"first_name"]!=[NSNull null]?[dic objectForKey:@"first_name"]:@"";
+                    tmpModel.LastName=[dic objectForKey:@"last_name"]!=[NSNull null]?[dic objectForKey:@"last_name"]:@"";
+                    tmpModel.MobileNo=[dic objectForKey:@"mobile_no"]!=[NSNull null]?[NSString stringWithFormat:@"%@",[dic objectForKey:@"mobile_no"]]:@"";
+                    
+                    [self refineBook:tmpModel];
+                }
+                //[self.tableView reloadData];
+                [self LoadUsers];
+                
+            }
+            //else
+            //   [SVProgressHUD dismiss];
+        }  andFailureBlock:^(NSError *error) {
+            // [SVProgressHUD dismiss];
+        }] ;
+    }
+
+}
+
+-(void)LoadUsers
 {
     
     if (reach.isReachable)
@@ -130,6 +195,20 @@
             // [SVProgressHUD dismiss];
         }] ;
     }
+}
+
+-(void) refineBook:(UserDataModel*) newAd
+{
+    for(int i=0;i<[localBook count];i++)
+    {
+        UserDataModel* person = (UserDataModel*) [localBook objectAtIndex:i];
+        if([person.MobileNo isEqualToString:newAd.MobileNo])
+        {
+            [localBook removeObjectAtIndex:i];
+            break;
+        }
+    }
+
 }
 
 - (void) AddToUsers:(UserDataModel*) newAd

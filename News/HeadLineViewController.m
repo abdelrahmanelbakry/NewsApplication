@@ -163,7 +163,7 @@
 {
     [tempHeadlines removeAllObjects];
     [groupedHeadlines removeAllObjects];
-    [self LoadData];
+    [self LoadHeadLinesShares];
 
 }
 
@@ -183,6 +183,95 @@
     return Query;
 
 }
+
+
+
+-(void)LoadHeadLinesShares
+{
+    //[NetworkOperations operationWithFullURL:@"http://young-journey-4873.herokuapp.com/category" parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response)
+    
+    if (reach.isReachable)
+    {
+        NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+        //NSString* userId = [userdefaults objectForKey:@"user_id"];
+        //NSString* URL = [NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/getStoriesSharedByUsersIFollow/%@",userId];
+        [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/getStoriesSharedByUsersIFollow/%@",[userdefaults objectForKey:@"user_id"]] parameters: nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+            if (response.count >0)
+            {
+                //1- get the favorite topics
+                //NSDictionary * favs= [[NSUserDefaults standardUserDefaults] objectForKey:@"favTopics"];
+                //2- set up the topics array
+                for (NSDictionary* dic in [response objectForKey:@"headlines"])
+                {
+                    TopicModel* tmpModel=[[TopicModel alloc]init];
+                    tmpModel.AllImgs = [[NSMutableArray alloc]init];
+                    [tmpModel.AllImgs addObject:[dic objectForKey:@"img"]!=[NSNull null]?[dic objectForKey:@"img"]:@""];
+                    tmpModel.Date=[dic objectForKey:@"date"]!=[NSNull null]?[dic objectForKey:@"date"]:@"";
+                    tmpModel.ID=[dic objectForKey:@"id"]!=[NSNull null]?[dic objectForKey:@"id"]:@"";
+                    tmpModel.ProviderID=[dic objectForKey:@"providerId"]!=[NSNull null]?[dic objectForKey:@"providerId"]:@"";
+                    tmpModel.Title=[dic objectForKey:@"title"]!=[NSNull null]?[dic objectForKey:@"title"]:@"";
+                    tmpModel.SectionName = [dic objectForKey:@"categoryId"]!=[NSNull null]?[dic objectForKey:@"categoryId"]:@"";
+                    
+                    ProviderModel* provider = [[ProvidersManager getProvidersManager] getProviderModel:[tmpModel.ProviderID intValue] ];
+                    if(provider.IsSelected)
+                        [self AddToTopicsShares:tmpModel];
+                }
+                [self.tableView reloadData];
+                
+                [RefreshRate setLastRefreshDate:[NSDate date]];
+                [self LoadHeadLinesFollows];
+
+            }
+            //else
+            //   [SVProgressHUD dismiss];
+        }  andFailureBlock:^(NSError *error) {
+            // [SVProgressHUD dismiss];
+        }] ;
+    }
+}
+
+-(void)LoadHeadLinesFollows
+{
+    //[NetworkOperations operationWithFullURL:@"http://young-journey-4873.herokuapp.com/category" parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response)
+    
+    if (reach.isReachable)
+    {
+        NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+
+        [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/getStoriesReadByUsersFollowedByMe/%@",[userdefaults objectForKey:@"user_id"]] parameters: nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+            if (response.count >0)
+            {
+                //1- get the favorite topics
+                //NSDictionary * favs= [[NSUserDefaults standardUserDefaults] objectForKey:@"favTopics"];
+                //2- set up the topics array
+                for (NSDictionary* dic in [response objectForKey:@"headlines"])
+                {
+                    TopicModel* tmpModel=[[TopicModel alloc]init];
+                    tmpModel.AllImgs = [[NSMutableArray alloc]init];
+                    [tmpModel.AllImgs addObject:[dic objectForKey:@"img"]!=[NSNull null]?[dic objectForKey:@"img"]:@""];
+                    tmpModel.Date=[dic objectForKey:@"date"]!=[NSNull null]?[dic objectForKey:@"date"]:@"";
+                    tmpModel.ID=[dic objectForKey:@"id"]!=[NSNull null]?[dic objectForKey:@"id"]:@"";
+                    tmpModel.ProviderID=[dic objectForKey:@"providerId"]!=[NSNull null]?[dic objectForKey:@"providerId"]:@"";
+                    tmpModel.Title=[dic objectForKey:@"title"]!=[NSNull null]?[dic objectForKey:@"title"]:@"";
+                    tmpModel.SectionName = [dic objectForKey:@"categoryId"]!=[NSNull null]?[dic objectForKey:@"categoryId"]:@"";
+                    
+                    ProviderModel* provider = [[ProvidersManager getProvidersManager] getProviderModel:[tmpModel.ProviderID intValue] ];
+                    if(provider.IsSelected)
+                        [self AddToTopicsFollows:tmpModel];
+                }
+                [self.tableView reloadData];
+                
+                [RefreshRate setLastRefreshDate:[NSDate date]];
+                [self LoadData];
+            }
+            //else
+            //   [SVProgressHUD dismiss];
+        }  andFailureBlock:^(NSError *error) {
+            // [SVProgressHUD dismiss];
+        }] ;
+    }
+}
+
 -(void)LoadData
 {
     //[NetworkOperations operationWithFullURL:@"http://young-journey-4873.herokuapp.com/category" parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response)
@@ -221,7 +310,6 @@
         }] ;
     }
 }
-
 - (void) AddToTopics:(TopicModel*) newAd
 {
     TopicModel* ad = [[TopicModel alloc]init];
@@ -246,6 +334,55 @@
     [tempHeadlines addObject:ad];
     
 }
+- (void) AddToTopicsFollows:(TopicModel*) newAd
+{
+    TopicModel* ad = [[TopicModel alloc]init];
+    ad.AllImgs = [[NSMutableArray alloc]initWithArray:[newAd.AllImgs copy] copyItems:YES];
+    ad.Date = newAd.Date;//[values objectAtIndex:4];
+    ad.ID = newAd.ID;//[values objectAtIndex:6];
+    ad.NumberOfViews = newAd.NumberOfViews;//[values objectAtIndex:14];
+    ad.NumberOfReadings = newAd.NumberOfReadings;//[values objectAtIndex:16];
+    ad.Title = newAd.Title;//[values objectAtIndex:22];
+    ad.Author = newAd.Author;//[values objectAtIndex:26];
+    ad.ProviderID = newAd.ProviderID;
+    ad.isDisplayed = newAd.isDisplayed;
+    
+    if([groupedHeadlines objectForKey:@"Follows"]!=nil)
+    {
+        [[groupedHeadlines objectForKey:@"Follows"] addObject:ad];
+    }
+    else
+    {
+        [groupedHeadlines setObject:[NSMutableArray arrayWithObject:ad] forKey:@"Follows"];
+    }
+    [tempHeadlines addObject:ad];
+    
+}
+
+- (void) AddToTopicsShares:(TopicModel*) newAd
+{
+    TopicModel* ad = [[TopicModel alloc]init];
+    ad.AllImgs = [[NSMutableArray alloc]initWithArray:[newAd.AllImgs copy] copyItems:YES];
+    ad.Date = newAd.Date;//[values objectAtIndex:4];
+    ad.ID = newAd.ID;//[values objectAtIndex:6];
+    ad.NumberOfViews = newAd.NumberOfViews;//[values objectAtIndex:14];
+    ad.NumberOfReadings = newAd.NumberOfReadings;//[values objectAtIndex:16];
+    ad.Title = newAd.Title;//[values objectAtIndex:22];
+    ad.Author = newAd.Author;//[values objectAtIndex:26];
+    ad.ProviderID = newAd.ProviderID;
+    ad.isDisplayed = newAd.isDisplayed;
+    
+    if([groupedHeadlines objectForKey:@"Shares"]!=nil)
+    {
+        [[groupedHeadlines objectForKey:@"Shares"] addObject:ad];
+    }
+    else
+    {
+        [groupedHeadlines setObject:[NSMutableArray arrayWithObject:ad] forKey:@"Shares"];
+    }
+    [tempHeadlines addObject:ad];
+    
+}
 
 #pragma mark - Table view data source
 -(NSInteger) getNumberofProviders
@@ -265,68 +402,64 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return [self getNumberofProviders];
+    return [self getNumberofProviders]+2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray* providers = [providersSet allObjects];
+    if(section ==0)
+         return [[groupedHeadlines objectForKey:@"Shares"] count];
+    if(section ==1)
+         return [[groupedHeadlines objectForKey:@"Follows"] count];
+    
+    ProviderModel* provider = [[ProvidersManager getProvidersManager].providers objectAtIndex:section-2];
+
+   // NSArray* providers = [providersSet allObjects];
     // Return the number of rows in the section.
-    return [[groupedHeadlines objectForKey:[providers objectAtIndex:section]] count];//[tempHeadlines count];
+    return [[groupedHeadlines objectForKey:[NSNumber numberWithInt:provider.ID]] count];//[tempHeadlines count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"headLineCell";
     HeadlineCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
-    NSArray* providers = [providersSet allObjects];
-    
-   // ProviderModel* provider = [[ProvidersManager getProvidersManager] getProviderModel:[providers objectAtIndex:indexPath.section]];
-    
-    
-    NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]];
-    
-    
-    
-    for(int i=0;i<[headlines count];i++)
+ //   NSArray* providers = [providersSet allObjects];
+    NSArray* headlines; //= [groupedHeadlines]
+
+    if(indexPath.section == 0)
+        headlines = [groupedHeadlines objectForKey:@"Shares"];
+    else if(indexPath.section ==1)
+        headlines = [groupedHeadlines objectForKey:@"Follows"];
+    else
     {
-        //long randomNumber = random();
-        TopicModel* tmpModel = (TopicModel*) [headlines objectAtIndex:i];
-        if(!tmpModel.isDisplayed)
-        {
-            [cell setCellDataWith:tmpModel ];
-            cell.tag = [tmpModel.ID intValue];
-            [[groupedHeadlines objectForKey:[providers objectAtIndex:indexPath.section]] removeObject:tmpModel];
-            tmpModel.isDisplayed = YES;
-            
-            
-            [self AddToTopics:tmpModel];
-            
-           // cell.te
-            break;
-        }
+        ProviderModel* provider = [[ProvidersManager getProvidersManager].providers objectAtIndex:indexPath.section-2];
+        headlines = [groupedHeadlines objectForKey:[NSNumber numberWithInt:provider.ID]];
+
     }
-    // Configure the cell...
-    
-    if(indexPath.row>2)
-        [cell.topicTitle setTextColor:  [UIColor lightGrayColor]];
+    TopicModel* tmpModel = (TopicModel*) [headlines objectAtIndex:indexPath.row];
+    [cell setCellDataWith:tmpModel ];
+    cell.tag = [tmpModel.ID intValue];
 
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 80;
+    return 90;
 }
 
 -(NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSArray* providers = [providersSet allObjects];
+    if(section==0) return @"Shared by Friends";
+    if(section==1) return @"Recommended by Friends";
     
-    int providerID = [[providers objectAtIndex:section] intValue];
-    ProviderModel* provider = [[ProvidersManager getProvidersManager] getProviderModel:providerID];
+   // NSArray* providers = [providersSet allObjects];
+    
+    //int providerID = section-2;
+    ProviderModel* provider = [[ProvidersManager getProvidersManager].providers objectAtIndex:section-2];
     
     return provider.Title;
-    //[NSString stringWithFormat:@"Provider # %i",section+1];
+    
+    
 }
 /*
 // Override to support conditional editing of the table view.
@@ -372,12 +505,8 @@
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-//   / NSArray* providers = [providersSet allObjects];
     if ([segue.identifier isEqualToString:@"ViewTopicSegueIdentifier"])
     {
-       // NSArray* headlines = [groupedHeadlines objectForKey:[providers objectAtIndex:[self.tableView indexPathForCell:sender].section]];
-
-      //  TopicModel * topic= [headlines objectAtIndex:[self.tableView indexPathForCell:sender].row];//[groupedHeadlines objectAtIndex:[self.tableView indexPathForCell:sender].row] ;
         
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
@@ -436,14 +565,37 @@
     switch (buttonIndex)
     {
         case 0:
-            [self shareAtFB];
+            [self markAsShared];
+            //[self shareAtFB];
             break;
         case 1:
-            [self shareAtTwitter];
+           // [self shareAtTwitter];
+            [self markAsShared];
             break;
     }
     
 }
+
+-(void) markAsShared
+{
+    ///shared/{user_id}?story_id={story_id}
+    NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
+
+    //Mark this story as shared
+    [NetworkOperations operationWithFullURL:[NSString stringWithFormat:@"http://young-journey-4873.herokuapp.com/shared/%@?story_id=%i",[userdefaults objectForKey:@"user_id"],selectedTopic] parameters:nil requestMethod:HTTPRequestMethodGET successBlock:^(NSDictionary * response){
+        if (response.count >0)
+        {
+            
+            
+        }
+        //else
+        //   [SVProgressHUD dismiss];
+    }  andFailureBlock:^(NSError *error) {
+        // [SVProgressHUD dismiss];
+    }] ;
+
+}
+
 -(void) shareAtFB
 {
     for(int i=0;i<[tempHeadlines count];i++)
