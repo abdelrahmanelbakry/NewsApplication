@@ -136,7 +136,7 @@
 }
 -(void) LoadTopicData
 {
-    NSString* strURL = [NSString stringWithFormat:@"%@details/383762",HEADLINE_URL,topicID];
+    NSString* strURL = [NSString stringWithFormat:@"%@details/%i",HEADLINE_URL,topicID];
 
     [NetworkOperations operationWithFullURL:strURL parameters:[self constructquery] requestMethod:HTTPRequestMethodGET successBlock:^(id response){
         if ([response count]>0) {
