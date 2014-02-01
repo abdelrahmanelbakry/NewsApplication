@@ -62,7 +62,7 @@
                                              target:self
                                              action:@selector(addFriendDialog:)];
     
-    UIBarButtonItem *settingsbutton          = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStyleBordered target:self action:@selector(settingsDialog:)];
+    UIBarButtonItem *settingsbutton          = [[UIBarButtonItem alloc] initWithTitle:@"الإعدادت" style:UIBarButtonItemStyleBordered target:self action:@selector(settingsDialog:)];
                                            // initWithBarButtonSystemItem:UIbar
                                            // target:self action:@selector(settingsDialog:)];
     
@@ -164,6 +164,7 @@
     [tempHeadlines removeAllObjects];
     [groupedHeadlines removeAllObjects];
     [self LoadHeadLinesShares];
+   // [self LoadData];
 
 }
 
@@ -449,8 +450,8 @@
 
 -(NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if(section==0) return @"Shared by Friends";
-    if(section==1) return @"Recommended by Friends";
+    if(section==0) return @"مشاركات من الأصدقاء";
+    if(section==1) return @"مقروء من الأصدقاء";
     
    // NSArray* providers = [providersSet allObjects];
     
@@ -566,10 +567,10 @@
     {
         case 0:
             [self markAsShared];
-            //[self shareAtFB];
+            [self shareAtFB];
             break;
         case 1:
-           // [self shareAtTwitter];
+            [self shareAtTwitter];
             [self markAsShared];
             break;
     }

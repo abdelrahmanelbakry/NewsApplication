@@ -75,7 +75,7 @@
         [super setEditing:NO animated:NO];
         [self.tableView setEditing:NO animated:NO];
         [self.tableView reloadData];
-        [self.navigationItem.rightBarButtonItem setTitle:@"ReOrder"];
+        [self.navigationItem.rightBarButtonItem setTitle:@"إعادة الترتيب"];
         [self.navigationItem.rightBarButtonItem setStyle:UIBarButtonItemStylePlain];
     }
     else
@@ -83,7 +83,7 @@
         [super setEditing:YES animated:YES];
         [self.tableView setEditing:YES animated:YES];
         [self.tableView reloadData];
-        [self.navigationItem.rightBarButtonItem setTitle:@"Done"];
+        [self.navigationItem.rightBarButtonItem setTitle:@"تم"];
         [self.navigationItem.rightBarButtonItem setStyle:UIBarButtonItemStyleDone];
     }
 }
@@ -106,9 +106,9 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if(section==0)
-        return @"Providers";
+        return @"المصادر";
     
-    return @"Update Rate";
+    return @"معدل التجديد";
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -131,9 +131,9 @@
         NSUserDefaults* userdefaults = [NSUserDefaults standardUserDefaults];
         
         if(indexPath.row == 0)
-           [cell.textLabel setText:@"Every 15 Mins."];
+           [cell.textLabel setText:@".كل ١٥ دقيقة"];
         if(indexPath.row == 1)
-            [cell.textLabel setText:@"Every 30 Mins."];
+            [cell.textLabel setText:@"كل ٣٠ دقيقة."];
         
         if([userdefaults integerForKey:@"rate"] == indexPath.row)
             cell.accessoryType = UITableViewCellAccessoryCheckmark;

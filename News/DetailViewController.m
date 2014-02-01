@@ -24,6 +24,7 @@
 
 @implementation DetailViewController
 
+@synthesize scrollView;
 @synthesize topicDataModel;
 @synthesize topicID;
 @synthesize topicTitle,topicContent,topicImg;
@@ -44,6 +45,11 @@
 	// Do any additional setup after loading the view.
     //hide the navigation bar
     //[self.navigationController setNavigationBarHidden:YES];
+    
+    //configure carousel
+    _carousel.type = iCarouselTypeCoverFlow2;
+    
+    scrollView.contentSize = CGSizeMake(320,1000);
 
     [self getCurrentTopicData];
 }
@@ -95,9 +101,12 @@
     
     self.topicDataModel.RelatedTopics = [[NSMutableArray alloc]init];
     
+
     for ( int i=0; i< [[response  objectForKey:@"Related"] count]; i++)
     {
         TopicModel* tmpModel = [[TopicModel alloc]init];
+        tmpModel.AllImgs =[[NSMutableArray alloc]init];
+
         tmpModel.ID =[[[response objectForKey:@"Related"] objectAtIndex:i] objectForKey:@"id"];
         tmpModel.Title =[[[response objectForKey:@"Related"] objectAtIndex:i] objectForKey:@"title"];
         [tmpModel.AllImgs addObject:[[[response objectForKey:@"Related"] objectAtIndex:i] objectForKey:@"img"]!=[NSNull null]?[[[response objectForKey:@"Related"] objectAtIndex:i] objectForKey:@"img"]:@""];
@@ -127,7 +136,7 @@
 }
 -(void) LoadTopicData
 {
-    NSString* strURL = [NSString stringWithFormat:@"%@details/%i",HEADLINE_URL,topicID];
+    NSString* strURL = [NSString stringWithFormat:@"%@details/383762",HEADLINE_URL,topicID];
 
     [NetworkOperations operationWithFullURL:strURL parameters:[self constructquery] requestMethod:HTTPRequestMethodGET successBlock:^(id response){
         if ([response count]>0) {
@@ -139,6 +148,7 @@
             
             [self updateLayout];
             [mytableView reloadData];
+            [_carousel reloadData];
         }
         
         
@@ -199,7 +209,7 @@
 
 -(NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return @"Related Topics";
+    return @"مواضيع ذات صلة";
 }
 
 
@@ -277,5 +287,65 @@
 //        detailVC.topicID = senderCell.tag ;
 //    }
 //}
+#pragma mark -
+#pragma mark iCarousel methods
+
+- (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
+{
+    //return the total number of items in the carousel
+    return [topicDataModel.RelatedTopics count];
+}
+
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
+{
+    UILabel *label = nil;
+    
+    TopicModel* tmpModel = (TopicModel*) [topicDataModel.RelatedTopics objectAtIndex:index];
+
+    //create new view if no view is available for recycling
+    if (view == nil)
+    {
+        //don't do anything specific to the index within
+        //this `if (view == nil) {...}` statement because the view will be
+        //recycled and used with other index values later
+        view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
+        
+      //  if([tmpModel.AllImgs count]>0)
+        //    [((UIImageView *)view) setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [tmpModel.AllImgs objectAtIndex:0] ]]];
+        
+        view.contentMode = UIViewContentModeCenter;
+        
+        label = [[UILabel alloc] initWithFrame:view.bounds];
+        label.backgroundColor = [UIColor clearColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.font = [label.font fontWithSize:20];
+        label.tag = 1;
+        [view addSubview:label];
+    }
+    else
+    {
+        //get a reference to the label in the recycled view
+        label = (UILabel *)[view viewWithTag:1];
+    }
+    
+    //set item label
+    //remember to always set any properties of your carousel item
+    //views outside of the `if (view == nil) {...}` check otherwise
+    //you'll get weird issues with carousel item content appearing
+    //in the wrong place in the carousel
+    
+    label.text = tmpModel.Title;//[_items[index] stringValue];
+    
+    return view;
+}
+
+- (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
+{
+    if (option == iCarouselOptionSpacing)
+    {
+        return value * 1.1f;
+    }
+    return value;
+}
 
 @end
