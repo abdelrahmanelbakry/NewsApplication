@@ -69,7 +69,7 @@
 {
     if (reach.isReachable)
     {
-        if([[txtPassword text] length]>6)
+        if([[txtPassword text] length]>=6)
         {
             NSURL* url = [NSURL URLWithString:@"http://young-journey-4873.herokuapp.com/register"];
             NSString* strURL = [NSString stringWithFormat:@"{\"utf8\":\"✓\",\"user\":{\"first_name\":\"%@\", \"last_name\":\"%@\", \"password\":\"%@\", \"mobile_no\":\"%@\", \"email\":\"%@\"}, \"commit\":\"Register\"}",txtFirstName.text, txtLastName.text,txtPassword.text,txtMobile.text,txtMail.text];

@@ -34,10 +34,10 @@
     [self.topicID setText:model.ID];
     [self.topicTitle setText:model.Title];
     
-    if([model.AllImgs count]<=0)
-        [self.topicImage setHidden:YES];
-    else
-        [self.topicImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [model.AllImgs objectAtIndex:0] ]]];
+    //if([model.AllImgs count]<=0)
+    //    [self.topicImage setHidden:YES];
+   // else
+    [self.topicImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [model.AllImgs objectAtIndex:0] ]] placeholderImage:[UIImage imageNamed:@"no-image-400x400.jpg"]];
     self.btnShare.tag = [model.ID intValue];
     
     

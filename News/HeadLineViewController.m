@@ -44,9 +44,9 @@
     [reach startNotifier];
 
     
-    [self.tableView addInfiniteScrollingWithActionHandler:^{
-        [self loadMoreHeadlines];
-    }];
+  //  [self.tableView addInfiniteScrollingWithActionHandler:^{
+  //      [self loadMoreHeadlines];
+   // }];
     
     [RefreshRate setLastRefreshDate:[NSDate date]];
 
@@ -567,10 +567,10 @@
     {
         case 0:
             [self markAsShared];
-            [self shareAtFB];
+           // [self shareAtFB];
             break;
         case 1:
-            [self shareAtTwitter];
+           // [self shareAtTwitter];
             [self markAsShared];
             break;
     }

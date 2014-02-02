@@ -49,7 +49,6 @@
     //configure carousel
     _carousel.type = iCarouselTypeCoverFlow2;
     
-    scrollView.contentSize = CGSizeMake(320,1000);
 
     [self getCurrentTopicData];
 }
@@ -62,14 +61,21 @@
 
 -(void) updateLayout
 {
-   // if(self.topicID==1)
-  //  {
-    
-  //  }
+    float scrollHeight=0;
     
     [self.topicContent setText:self.topicDataModel.Content];
-    [self.topicImg setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [self.topicDataModel.AllImgs objectAtIndex:0] ]]];
+    CGRect frame = self.topicContent.frame;
+    frame.size.height = self.topicContent.contentSize.height+100;
+    self.topicContent.frame = frame;
+    //if([self.topicDataModel.AllImgs count]>0)
+    [self.topicImg setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", [self.topicDataModel.AllImgs objectAtIndex:0] ]] placeholderImage:[UIImage imageNamed:@"no-image-400x400.jpg"]];
+   // else
+     //   [self.topicImg removeFromSuperview];
+    
     [self.topicTitle setText:self.topicDataModel.Title];
+    
+    scrollHeight+=frame.size.height+self.topicImg.frame.size.height+self.topicTitle.frame.size.height+150;
+    scrollView.contentSize = CGSizeMake(320,scrollHeight);
     
 }
 #pragma mark Data Loading functions
